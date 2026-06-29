@@ -1,0 +1,226 @@
+"""
+Basic (1–10)
+Convert a string to uppercase.
+Convert a string to lowercase.
+Convert the first letter of a string to uppercase.
+Convert the first letter of every word to uppercase.
+Reverse a string.
+Find the length of a string without using len().
+Count the number of vowels in a string.
+Count the number of consonants in a string.
+Count the number of spaces in a string.
+Count the number of digits in a string.
+
+Searching & Checking (11–20)
+Check whether a string starts with a specific character.
+Check whether a string ends with a specific character.
+Check whether a substring exists in a string.
+Count how many times a character appears in a string.
+Count how many times a word appears in a sentence.
+Find the index of the first occurrence of a character.
+Find the index of the last occurrence of a character.
+Check whether a string contains only alphabets.
+Check whether a string contains only digits.
+Check whether a string contains both letters and numbers.
+
+Comparison & Conditions (21–30)
+Check whether two strings are equal.
+Compare two strings without considering case.
+Check whether a string is empty.
+Check whether a string is a palindrome.
+Check whether a string is in uppercase.
+Check whether a string is in lowercase.
+Check whether the first and last characters are the same.
+Check whether a string has more vowels than consonants.
+Check whether the length of a string is even or odd.
+Check whether a string contains at least one special character.
+
+Modification (31–40)
+Replace all spaces with hyphens.
+Replace one word with another word.
+Remove all spaces from a string.
+Remove leading and trailing spaces.
+Swap the case of every character.
+Split a sentence into words and print each word on a new line.
+Join a list of words into a single string using commas.
+Print every character of a string on a separate line.
+Print only the characters at even indexes.
+Print only the characters at odd indexes.
+
+Challenge (Optional)
+Reverse each word in a sentence.
+Find the longest word in a sentence.
+Find the shortest word in a sentence.
+Count uppercase, lowercase, digits, spaces, and special characters separately.
+Check whether two strings are anagrams.
+Remove duplicate characters from a string.
+Print the frequency of each character.
+Find the first non-repeating character.
+Find the first repeating character.
+Compress a string (e.g., "aaabbcc" → "a3b2c2").
+
+These 40 questions cover most commonly used string methods such as:
+
+upper()
+lower()
+capitalize()
+title()
+swapcase()
+startswith()
+endswith()
+count()
+find()
+rfind()
+replace()
+strip()
+split()
+join()
+isalpha()
+isdigit()
+isalnum()
+islower()
+isupper()
+isspace()
+"""
+
+# Convert a string to uppercase.
+# str="Intelligent"
+# print(str.upper())
+# # Convert a string to lowercase.
+# print(str.lower())
+# # Convert the first letter of a string to uppercase.
+# print(str.capitalize())
+# # Convert the first letter of every word to uppercase.
+# print(str.title())
+# # Reverse a string.
+# print(str[::-1])
+# # Find the length of a string without using len().
+# length=0
+# for i in str:
+#     length+=1
+# print(f"Total length of the given string is {length}")
+# # Count the number of vowels in a string.
+# vowels=0
+# for i in str:
+#     if i in 'AEIOUaeiou':
+#         vowels+=1
+# print(f"Total number of vowels are present in the given string are{vowels}")
+# # Count the number of consonants in a string.
+# consonants=0
+# for i in str:
+#     if i not in 'AEIOUaeiou':
+#         consonants+=1
+# print(f"Total number of vowels are present in the given string are{consonants}")
+# # Count the number of spaces in a string.
+# print(str.count(" "))
+# # Count the number of digits in a string.
+# count=0
+# for i in str:
+#     if i ==i.isspace():
+#         count+=1
+# print(f"Total numbers of spaces are present in the given string is {count}")
+
+# """Convert a string to uppercase."""
+# str = "papun kumar bhola"
+# str = str.upper()
+# print(str)
+# print(str.lower())
+# """Convert the first letter of a string to uppercase"""
+# str = "papun kumar bhola"
+# print(str.capitalize())
+# """Convert the first letter of every word to uppercase."""
+# n = "my name is papun kumar bhola"
+# print(n.title())
+# """Reverse a string."""
+# str = "Papun Kumar Bhola"
+# rg=len(str)
+# for i in range(0,rg,-1):
+#     print(i)
+# print(str[len(str)::-1])
+# """Find the length of a string without using len()."""
+# str = "Papun Kumar Bhola"
+# length = 0
+# for i in str:
+#     length+=1
+# print(f"value of length {length}")
+# """Count the number of vowels in a string."""
+# str = "papun kumar bhola"
+# vowels=0
+# for i in str:
+#     if i in 'AEIOUaeiou':
+#         vowels+=1
+# print(f"Total number of vowels are present in the given string are{vowels}")
+# """Count the number of consonants in a string."""
+# str = "papun kumar bhola"
+# consonants=0
+# for i in str:
+#     if i not in 'AEIOUaeiou':
+#         consonants+=1
+# print(f"total number of consonants are{consonants}")
+# """Count the number of spaces in a string."""
+# str = "papun kumar bhola"
+# print(str.count(" "))
+# """Count the number of digits in a string."""
+# str = "my contact number is 8018830034"
+# count = 0
+# for i in str:
+#     if i.isdigit():
+#         count +=1
+# print(f"Total number of counts are {count}")
+# """Check whether a string starts with a specific character."""
+# """Check whether a string ends with a specific character."""
+# str = "papun kumar bhola"
+# print(str.startswith("pa"))
+# print(str.endswith("ola"))
+# """Check whether a substring exists in a string."""
+# str = "papun kumar bhola"
+# if str.find("kumar"):
+#     print("sub string is found")
+# """Count how many times a character appears in a string."""   
+# str = "papun kumar bhola"
+# print(str.count("a"))
+# """Count how many times a word appears in a sentence."""
+# str ="Bill wise sales report not generate Issue got resolved after register the all dll file dll file properly not register"
+# print(str.count("dll"))
+# """Find the index of the first occurrence of a character."""
+# str = "congratulations"
+# ch = "c"
+# i = str.find(ch)
+# print(i)
+# """Find the index of the last occurrence of a character."""
+# ch = "s"
+# i = str.find(ch)
+# print(i)
+# """Check whether a string contains only alphabets."""
+# str = input("Enter a string: ")
+# if str.isalpha():
+#     print("Contains only alphabets")
+# else:
+#     print("Contains  not only alphabets")
+# """Check whether a string contains only digits."""
+# digit = input("Enter what do you want : ")
+# if digit.isdigit():
+#     print("Contains only digits")
+# else:
+#     print("Contains  not only digits")
+"""Check whether a string contains both letters and numbers."""
+str = "papu34n"
+has_Latter=False
+has_number=False
+for i in str:
+    if i.isdigit():
+        has_number=True
+    if i.isalpha():
+        has_Latter=True
+if has_Latter and has_number:
+    print(f"The string {str} contains number along with letters")
+else:
+    print(f"The string {str} contains only letters")
+"""Check whether two strings are equal."""
+a = "papun kumar"
+b = input("Enput a string : ")
+if a == b:
+    print("Both string are equal")
+else:
+    print("Both string are notequal")
+"""Compare two strings without considering case."""
