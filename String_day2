@@ -1,0 +1,89 @@
+# ==========================================
+#        STRING UTILITY PROJECT
+# ==========================================
+text = input("Enter a string : ")
+while True:
+    print("\n======= STRING MANUE =======")
+    print("1. Convert to Uppercase")
+    print("2. Convert to Lowercase")
+    print("3. Count Character")
+    print("4. Revers String")
+    print("5. Check Palindrome")
+    print("6. Count Vowels")
+    print("7. Count Digits")
+    print("8. Replace a Word")
+    print("9. Find a Word")
+    print("10. Check startswith")
+    print("11. Check endswith")
+    print("12. Split String")
+    print("13. Join string")
+    print("14. Remove Extra Space")
+    print("15. Exit")
+
+    choice = int(input("Enter your choice : "))
+
+    if choice == 1:
+        print(text.upper())
+    elif choice == 2:
+        print(text.lower())
+    elif choice == 3:
+        print("Length:", len(text))
+    elif choice == 4:
+        print(text[::-1])
+    elif choice == 5:
+        if text == text[::-1]:
+            print("Palindrome")
+        else:
+            print("Not a Palindrome")
+    elif choice == 6:
+        count = 0
+        for i in text:
+            if i.lower() in 'aeiou':
+                count+=1
+        print("Total vowels:", count)
+    elif choice == 7:
+        count = 0
+        for i in text:
+            if i.count():
+                count+=1
+        print("Total Digits:", count)
+    elif choice == 8:
+        old = input("Enter old word : ")
+        new = input("Enter new word : ")
+        print(text.replace(old, new))
+    elif choice == 9:
+        word = input("Enter word to find : ")
+        position = text.find(word)
+        if position == -1:
+            print("Wodr not found")
+        else:
+            print("Found at index:", position)
+    elif choice == 10:
+        ch = input("Enter starting string : ")
+        if text.startswith(ch):
+            print("Yes")
+        else:
+            print("No")
+    elif choice == 11:
+        ch = input("Enter ending string : ")
+        if text.endswith(ch):
+            print("Yes")
+        else:
+            print("No")
+    elif choice == 12:
+        print(text.split())
+    elif choice == 13:
+        words = text.split()
+        print("-".join(words))
+    elif choice == 14:
+        print(text.strip())
+    elif choice == 15:
+        print("Thank You!")
+        break
+    else:
+        print("Invalid choice")
+    
+
+
+
+
