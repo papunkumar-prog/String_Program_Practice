@@ -1,0 +1,34 @@
+"""Check Whether a String Starts with a Vowel"""
+str = input("Enter a string : ")
+
+first_char = str[0].lower()
+if first_char in 'aeiou':
+    print("The string starts with a vowel.")
+else:
+    print("The string does not start with a vowel.")
+"""Compare Two Strings"""
+str1 = input("Enter first string : ")
+str2 = input("Enter second string : ")
+if str1 == str2:
+    print("Both strings are equal")
+else:
+    print("Both strings are not equal")
+"""Check Whether a String is Empty"""
+str = input("Enter a string : ")
+if str == "":
+    print("The string is empty.")
+else:
+    print("The string is not empty.")
+"""Check Whether a String Ends with a Specific Character"""
+str = input("Enter a string : ")
+char = input("Enter a string : ")
+if str.endswith(char):
+    print("The string ends with the given character.")
+else:
+    print("he string does not end with the given character.")
+"""Check Whether the Length of a String is Even or Odd"""
+str =input("Enter a string : ")
+if len(str) % 2 == 0:
+    print("The length of the string is Even.")
+else:
+    print("The length of the string is odd.")
