@@ -1,0 +1,83 @@
+#----------------------------------------------
+#   Count the number of vowels
+#----------------------------------------------
+
+text = "Hello Python"
+count = 0
+for ch in text.lower():
+    if ch in "aeiou":
+        count += 1
+print("Vowels :", count)
+#----------------------------------------------
+#   Reverse a string (without slicing)
+#----------------------------------------------
+text = "Python"
+reverse = ""
+for i in range(len(text) -1, -1, -1):
+    reverse += text[i]
+print(reverse)
+#----------------------------------------------
+#   Check whether a string is a palindrome
+#----------------------------------------------
+text1 = "madam"
+reverse = ""
+for i in range(len(text1)-1, -1, -1):
+    reverse += text1[i]
+    if reverse == text1:
+        print("Palindrome")
+    else:
+        print("Not Palindrome")
+#----------------------------------------------
+#   Count uppercase and lowercase letters
+#----------------------------------------------
+text2 = "Hello PYTHON"
+upper = 0
+lower = 0
+for ch in text2:
+    if ch.isupper():
+        upper += 1
+    elif ch.lower():
+        lower += 1
+print("Upper case :", upper)
+print("Lower case :", lower)
+#----------------------------------------------
+#   Count digits in a string
+#----------------------------------------------
+text3 = "Python12345"
+count = 0
+for j in text3:
+    if j.isdigit():
+        count += 1
+print("Digit is :", count)
+#----------------------------------------------
+#   Remove all spaces
+#----------------------------------------------
+text4 = "Hollo Python World"
+new_text = ""
+for p in text4:
+    if p != " ":
+        new_text += p
+print(new_text)
+#----------------------------------------------
+#   Find the longest word
+#----------------------------------------------
+text5 = "Python is very easy to learn"
+words = text5.split()
+longest = words[0]
+for word in words:
+    if len(word) > len(longest):
+        longest = word
+print("Longest Word :", longest)
+#----------------------------------------------
+#  Count how many times each character appears
+#----------------------------------------------
+text6 = "banana"
+visited = ""
+for re in text6:
+    if re in visited:
+        count = 0
+    for letter in text6:
+        if re == text6:
+            count += 1
+    print(re, "=", count)
+    visited += re
