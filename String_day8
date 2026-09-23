@@ -1,0 +1,60 @@
+# Count Vowels in a String
+
+text = input("Enter a sentence: ")
+
+count = 0
+
+for char in text:
+    if char.lower() in "aeiou":
+        count += 1
+
+print("Number of vowels:", count)
+==========================================
+# Reverse a String
+
+text = input("Enter a word: ")
+
+reverse = ""
+
+for char in text:
+    reverse = char + reverse
+
+print("Original:", text)
+print("Reverse:", reverse)
+===========================================
+# Check Palindrome
+
+text = input("Enter a word: ")
+
+reverse = text[::-1]
+
+if text.lower() == reverse.lower():
+    print("It is a palindrome")
+else:
+    print("It is not a palindrome")
+============================================
+# Count Words in a Sentence
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+
+print("Words:", words)
+print("Total words:", len(words))
+=============================================
+# Count Each Character
+
+text = input("Enter a word: ")
+
+characters = {}
+
+for char in text:
+    if char in characters:
+        characters[char] += 1
+    else:
+        characters[char] = 1
+
+print("Character count:")
+
+for char, count in characters.items():
+    print(char, "=", count)
