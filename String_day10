@@ -1,0 +1,88 @@
+#----------------------------------------------------------------
+# Count Digits and Special Characters
+#----------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+letters = 0
+digits = 0
+special = 0
+
+for char in text:
+    if char.isalpha():
+        letters += 1
+    elif char.isdigit():
+        digits += 1
+    else:
+        special += 1
+
+print("Letters:", letters)
+print("Digits:", digits)
+print("Special characters:", special)
+
+#----------------------------------------------------------------
+# Find the First Character That Appears Only Once
+#----------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+for char in text:
+    if text.count(char) == 1:
+        print("First unique character:", char)
+        break
+else:
+    print("No unique character found")
+
+#----------------------------------------------------------------
+# Count How Many Times a Word Appears
+#----------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+word = input("Enter the word to count: ")
+
+words = sentence.lower().split()
+
+count = 0
+
+for item in words:
+    if item == word.lower():
+        count += 1
+
+print("The word appears", count, "time(s)")
+
+#----------------------------------------------------------------
+# Convert First Letter of Each Word to Uppercase
+#----------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+
+result = ""
+
+for word in words:
+    result = result + word[0].upper() + word[1:] + " "
+
+print("Result:", result.strip())
+
+#----------------------------------------------------------------
+# Find the Most Repeated Character
+#----------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+max_count = 0
+max_char = ""
+
+for char in text:
+    if char == " ":
+        continue
+
+    count = text.count(char)
+
+    if count > max_count:
+        max_count = count
+        max_char = char
+
+print("Most repeated character:", max_char)
+print("Number of times:", max_count)
