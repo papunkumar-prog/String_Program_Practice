@@ -1,0 +1,71 @@
+#------------------------------------------------------------------
+# Remove Duplicate Characters
+#------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+result = ""
+
+for char in text:
+    if char not in result:
+        result += char
+
+print("Original string:", text)
+print("After removing duplicates:", result)
+
+#------------------------------------------------------------------
+# Find the Number of Spaces
+#------------------------------------------------------------------
+
+text = input("Enter a sentence: ")
+
+space_count = 0
+
+for char in text:
+    if char == " ":
+        space_count += 1
+
+print("Number of spaces:", space_count)
+
+#------------------------------------------------------------------
+# Check Whether Two Strings Are Anagrams
+#------------------------------------------------------------------
+
+text1 = input("Enter first string: ")
+text2 = input("Enter second string: ")
+
+text1 = text1.replace(" ", "").lower()
+text2 = text2.replace(" ", "").lower()
+
+if sorted(text1) == sorted(text2):
+    print("Both strings are anagrams")
+else:
+    print("Both strings are not anagrams")
+
+#------------------------------------------------------------------
+# Print Each Word on a New Line
+#------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+
+for word in words:
+    print(word)
+
+#------------------------------------------------------------------
+# Find the Shortest Word
+#------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+
+shortest = words[0]
+
+for word in words:
+    if len(word) < len(shortest):
+        shortest = word
+
+print("Shortest word:", shortest)
+print("Length:", len(shortest))
