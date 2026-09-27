@@ -1,0 +1,68 @@
+#---------------------------------------------------------------------------
+# Find the First and Last Character
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+if len(text) > 0:
+    print("First character:", text[0])
+    print("Last character:", text[-1])
+else:
+    print("String is empty")
+
+#---------------------------------------------------------------------------
+# Count a Particular Character
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+search = input("Enter a character to find: ")
+
+count = 0
+
+for char in text:
+    if char.lower() == search.lower():
+        count += 1
+
+print(search, "appears", count, "time(s)")
+
+#---------------------------------------------------------------------------
+# Reverse Every Word in a Sentence
+#---------------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+result = []
+
+for word in words:
+    result.append(word[::-1])
+
+print("Result:", " ".join(result))
+
+#---------------------------------------------------------------------------
+# Find Duplicate Characters
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+duplicates = ""
+
+for char in text:
+    if text.count(char) > 1 and char not in duplicates:
+        duplicates += char
+
+if duplicates:
+    print("Duplicate characters:", duplicates)
+else:
+    print("No duplicate characters found")
+
+#---------------------------------------------------------------------------
+# Check Whether a String Contains Only Alphabets
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+if text.isalpha():
+    print("The string contains only alphabets")
+else:
+    print("The string contains numbers or special characters")
