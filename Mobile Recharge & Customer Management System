@@ -1,0 +1,714 @@
+# ============================================================
+
+# MOBILE RECHARGE & CUSTOMER MANAGEMENT SYSTEM
+
+# Simple CLI project using Python basics and NumPy
+
+# ============================================================
+
+import numpy as np
+
+# Available mobile plans
+
+plans = (
+"Basic",
+"Standard",
+"Premium",
+"Unlimited"
+)
+
+# Plan prices
+
+plan_price = {
+"Basic": 199,
+"Standard": 299,
+"Premium": 499,
+"Unlimited": 799
+}
+
+# Customer details
+
+customers = [
+{
+"id": 101,
+"name": "Papun",
+"phone": "9876543210",
+"plan": "Standard",
+"validity": 28
+},
+{
+"id": 102,
+"name": "Amit",
+"phone": "9123456780",
+"plan": "Premium",
+"validity": 56
+},
+{
+"id": 103,
+"name": "Rahul",
+"phone": "9988776655",
+"plan": "Basic",
+"validity": 28
+}
+]
+
+# ============================================================
+
+# FIND CUSTOMER
+
+# ============================================================
+
+def find_customer(customer_id):
+
+```
+for customer in customers:
+
+    if customer["id"] == customer_id:
+        return customer
+
+return None
+```
+
+# ============================================================
+
+# SHOW PLANS
+
+# ============================================================
+
+def show_plans():
+
+```
+print("\n----------- RECHARGE PLANS -----------")
+
+for plan in plans:
+
+    print(
+        plan,
+        "- ₹",
+        plan_price[plan]
+    )
+```
+
+# ============================================================
+
+# ADD CUSTOMER
+
+# ============================================================
+
+def add_customer():
+
+```
+print("\n----------- ADD CUSTOMER -----------")
+
+try:
+
+    customer_id = int(
+        input("Enter customer ID: ")
+    )
+
+    for customer in customers:
+
+        if customer["id"] == customer_id:
+
+            print("Customer ID already exists.")
+            return
+
+    name = input(
+        "Enter customer name: "
+    ).strip().title()
+
+    if name == "":
+
+        print("Name is required.")
+        return
+
+    phone = input(
+        "Enter mobile number: "
+    ).strip()
+
+    if len(phone) != 10 or not phone.isdigit():
+
+        print("Enter a valid 10-digit mobile number.")
+        return
+
+    show_plans()
+
+    plan = input(
+        "Enter plan name: "
+    ).strip().title()
+
+    if plan not in plans:
+
+        print("Invalid plan.")
+        return
+
+    validity = int(
+        input("Enter plan validity in days: ")
+    )
+
+    if validity <= 0:
+
+        print("Validity must be greater than zero.")
+        return
+
+    customer = {
+        "id": customer_id,
+        "name": name,
+        "phone": phone,
+        "plan": plan,
+        "validity": validity
+    }
+
+    customers.append(customer)
+
+    print("Customer added successfully.")
+
+
+except ValueError:
+
+    print("Please enter valid values.")
+```
+
+# ============================================================
+
+# SHOW ALL CUSTOMERS
+
+# ============================================================
+
+def show_customers():
+
+```
+print("\n----------- ALL CUSTOMERS -----------")
+
+if len(customers) == 0:
+
+    print("No customers found.")
+    return
+
+for customer in customers:
+
+    amount = plan_price[customer["plan"]]
+
+    print("-------------------------------------")
+    print("ID       :", customer["id"])
+    print("Name     :", customer["name"])
+    print("Phone    :", customer["phone"])
+    print("Plan     :", customer["plan"])
+    print("Validity :", customer["validity"], "days")
+    print("Recharge : ₹", amount)
+```
+
+# ============================================================
+
+# SEARCH CUSTOMER
+
+# ============================================================
+
+def search_customer():
+
+```
+print("\n----------- SEARCH CUSTOMER -----------")
+
+phone = input(
+    "Enter mobile number: "
+).strip()
+
+for customer in customers:
+
+    if customer["phone"] == phone:
+
+        amount = plan_price[
+            customer["plan"]
+        ]
+
+        print("\nCustomer found")
+        print("ID       :", customer["id"])
+        print("Name     :", customer["name"])
+        print("Phone    :", customer["phone"])
+        print("Plan     :", customer["plan"])
+        print("Validity :", customer["validity"], "days")
+        print("Recharge : ₹", amount)
+
+        return
+
+print("Customer not found.")
+```
+
+# ============================================================
+
+# RECHARGE CUSTOMER
+
+# ============================================================
+
+def recharge_customer():
+
+```
+print("\n----------- RECHARGE CUSTOMER -----------")
+
+try:
+
+    customer_id = int(
+        input("Enter customer ID: ")
+    )
+
+    customer = find_customer(customer_id)
+
+    if customer is None:
+
+        print("Customer not found.")
+        return
+
+    print("Customer:", customer["name"])
+    print("Current plan:", customer["plan"])
+
+    show_plans()
+
+    new_plan = input(
+        "Enter new plan: "
+    ).strip().title()
+
+    if new_plan not in plans:
+
+        print("Invalid plan.")
+        return
+
+    customer["plan"] = new_plan
+
+    print("Recharge successful.")
+    print("New plan:", new_plan)
+    print(
+        "Amount: ₹",
+        plan_price[new_plan]
+    )
+
+
+except ValueError:
+
+    print("Enter a valid customer ID.")
+```
+
+# ============================================================
+
+# UPDATE VALIDITY
+
+# ============================================================
+
+def update_validity():
+
+```
+print("\n----------- UPDATE VALIDITY -----------")
+
+try:
+
+    customer_id = int(
+        input("Enter customer ID: ")
+    )
+
+    customer = find_customer(customer_id)
+
+    if customer is None:
+
+        print("Customer not found.")
+        return
+
+    print(
+        "Current validity:",
+        customer["validity"],
+        "days"
+    )
+
+    days = int(
+        input("Enter new validity: ")
+    )
+
+    if days <= 0:
+
+        print("Validity must be greater than zero.")
+        return
+
+    customer["validity"] = days
+
+    print("Validity updated successfully.")
+
+
+except ValueError:
+
+    print("Enter a valid number.")
+```
+
+# ============================================================
+
+# CHECK VALIDITY
+
+# ============================================================
+
+def validity_status(days):
+
+```
+if days <= 5:
+
+    return "Expiring Soon"
+
+elif days <= 15:
+
+    return "Active"
+
+else:
+
+    return "Long Validity"
+```
+
+# ============================================================
+
+# VALIDITY REPORT
+
+# ============================================================
+
+def validity_report():
+
+```
+print("\n----------- VALIDITY REPORT -----------")
+
+if len(customers) == 0:
+
+    print("No customers found.")
+    return
+
+for customer in customers:
+
+    status = validity_status(
+        customer["validity"]
+    )
+
+    print("-------------------------------------")
+    print("Name     :", customer["name"])
+    print("Phone    :", customer["phone"])
+    print("Validity :", customer["validity"], "days")
+    print("Status   :", status)
+```
+
+# ============================================================
+
+# HIGHEST RECHARGE PLAN
+
+# ============================================================
+
+def highest_recharge():
+
+```
+print("\n----------- HIGHEST RECHARGE -----------")
+
+if len(customers) == 0:
+
+    print("No customers found.")
+    return
+
+amounts = []
+
+for customer in customers:
+
+    amount = plan_price[
+        customer["plan"]
+    ]
+
+    amounts.append(amount)
+
+amount_array = np.array(amounts)
+
+highest = np.max(amount_array)
+
+for customer in customers:
+
+    amount = plan_price[
+        customer["plan"]
+    ]
+
+    if amount == highest:
+
+        print("Customer :", customer["name"])
+        print("Plan     :", customer["plan"])
+        print("Amount   : ₹", highest)
+```
+
+# ============================================================
+
+# LOWEST RECHARGE PLAN
+
+# ============================================================
+
+def lowest_recharge():
+
+```
+print("\n----------- LOWEST RECHARGE -----------")
+
+if len(customers) == 0:
+
+    print("No customers found.")
+    return
+
+amounts = []
+
+for customer in customers:
+
+    amount = plan_price[
+        customer["plan"]
+    ]
+
+    amounts.append(amount)
+
+amount_array = np.array(amounts)
+
+lowest = np.min(amount_array)
+
+for customer in customers:
+
+    amount = plan_price[
+        customer["plan"]
+    ]
+
+    if amount == lowest:
+
+        print("Customer :", customer["name"])
+        print("Plan     :", customer["plan"])
+        print("Amount   : ₹", lowest)
+```
+
+# ============================================================
+
+# AVERAGE RECHARGE
+
+# ============================================================
+
+def average_recharge():
+
+```
+print("\n----------- AVERAGE RECHARGE -----------")
+
+if len(customers) == 0:
+
+    print("No customers found.")
+    return
+
+amounts = []
+
+for customer in customers:
+
+    amount = plan_price[
+        customer["plan"]
+    ]
+
+    amounts.append(amount)
+
+amount_array = np.array(amounts)
+
+average = np.mean(amount_array)
+
+print(
+    "Average recharge amount: ₹",
+    round(average, 2)
+)
+```
+
+# ============================================================
+
+# TOTAL RECHARGE COLLECTION
+
+# ============================================================
+
+def total_collection():
+
+```
+print("\n----------- TOTAL COLLECTION -----------")
+
+total = 0
+
+for customer in customers:
+
+    amount = plan_price[
+        customer["plan"]
+    ]
+
+    total = total + amount
+
+print("Total recharge collection: ₹", total)
+```
+
+# ============================================================
+
+# PLAN SUMMARY
+
+# ============================================================
+
+def plan_summary():
+
+```
+print("\n----------- PLAN SUMMARY -----------")
+
+summary = {}
+
+# Start each plan with zero customers
+for plan in plans:
+
+    summary[plan] = 0
+
+# Count customers
+for customer in customers:
+
+    plan = customer["plan"]
+
+    summary[plan] = (
+        summary[plan] + 1
+    )
+
+for plan, count in summary.items():
+
+    print(plan, ":", count)
+```
+
+# ============================================================
+
+# DELETE CUSTOMER
+
+# ============================================================
+
+def delete_customer():
+
+```
+print("\n----------- DELETE CUSTOMER -----------")
+
+try:
+
+    customer_id = int(
+        input("Enter customer ID: ")
+    )
+
+    customer = find_customer(customer_id)
+
+    if customer is None:
+
+        print("Customer not found.")
+        return
+
+    print("Customer:", customer["name"])
+    print("Phone   :", customer["phone"])
+
+    confirm = input(
+        "Delete this customer? (y/n): "
+    ).strip().lower()
+
+    if confirm == "y":
+
+        customers.remove(customer)
+
+        print("Customer deleted.")
+
+    else:
+
+        print("Delete cancelled.")
+
+
+except ValueError:
+
+    print("Enter a valid customer ID.")
+```
+
+# ============================================================
+
+# MAIN MENU
+
+# ============================================================
+
+def main():
+
+```
+while True:
+
+    print("\n")
+    print("==========================================")
+    print("     MOBILE RECHARGE MANAGEMENT SYSTEM")
+    print("==========================================")
+    print("1. Show Recharge Plans")
+    print("2. Add Customer")
+    print("3. Show All Customers")
+    print("4. Search Customer")
+    print("5. Recharge Customer")
+    print("6. Update Validity")
+    print("7. Validity Report")
+    print("8. Highest Recharge")
+    print("9. Lowest Recharge")
+    print("10. Average Recharge")
+    print("11. Total Collection")
+    print("12. Plan Summary")
+    print("13. Delete Customer")
+    print("14. Exit")
+    print("==========================================")
+
+    choice = input(
+        "Enter your choice: "
+    ).strip()
+
+    if choice == "1":
+
+        show_plans()
+
+    elif choice == "2":
+
+        add_customer()
+
+    elif choice == "3":
+
+        show_customers()
+
+    elif choice == "4":
+
+        search_customer()
+
+    elif choice == "5":
+
+        recharge_customer()
+
+    elif choice == "6":
+
+        update_validity()
+
+    elif choice == "7":
+
+        validity_report()
+
+    elif choice == "8":
+
+        highest_recharge()
+
+    elif choice == "9":
+
+        lowest_recharge()
+
+    elif choice == "10":
+
+        average_recharge()
+
+    elif choice == "11":
+
+        total_collection()
+
+    elif choice == "12":
+
+        plan_summary()
+
+    elif choice == "13":
+
+        delete_customer()
+
+    elif choice == "14":
+
+        print("\nThank you. Program closed.")
+        break
+
+    else:
+
+        print("Invalid choice. Please try again.")
+```
+
+# Start the program
+
+main()
