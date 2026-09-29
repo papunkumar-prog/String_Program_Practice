@@ -1,0 +1,61 @@
+#---------------------------------------------------------------------------
+# Count the Number of Words With Even Length
+#---------------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+count = 0
+
+for word in words:
+    if len(word) % 2 == 0:
+        count += 1
+
+print("Words with even length:", count)
+
+#---------------------------------------------------------------------------
+# Print Characters at Even Positions
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+for i in range(len(text)):
+    if i % 2 == 0:
+        print(text[i])
+
+#---------------------------------------------------------------------------
+# Check Whether a String Contains Only Numbers
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+if text.isdigit():
+    print("The string contains only numbers")
+else:
+    print("The string contains other characters")
+
+#---------------------------------------------------------------------------
+# Capitalize the First Letter Without Using capitalize()
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+if len(text) > 0:
+    result = text[0].upper() + text[1:]
+    print("Result:", result)
+else:
+    print("String is empty")
+
+#---------------------------------------------------------------------------
+# Find the Sum of Digits Present in a String
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+total = 0
+
+for char in text:
+    if char.isdigit():
+        total += int(char)
+
+print("Sum of digits:", total)
