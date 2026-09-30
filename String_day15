@@ -1,0 +1,77 @@
+#--------------------------------------------------------------------------
+# Count Words Ending With a Particular Letter
+#--------------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+letter = input("Enter the ending letter: ")
+
+words = sentence.split()
+count = 0
+
+for word in words:
+    if word.lower().endswith(letter.lower()):
+        count += 1
+
+print("Words ending with", letter, ":", count)
+
+#--------------------------------------------------------------------------
+# Print Each Character With Its Position
+#--------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+for i in range(len(text)):
+    print("Position", i, "=", text[i])
+
+#--------------------------------------------------------------------------
+# Remove Duplicate Words From a Sentence
+#--------------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.lower().split()
+result = []
+
+for word in words:
+    if word not in result:
+        result.append(word)
+
+print("Original sentence:", sentence)
+print("After removing duplicate words:", " ".join(result))
+
+#--------------------------------------------------------------------------
+# Find the Number of Words With a Vowel
+#--------------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+count = 0
+
+for word in words:
+    has_vowel = False
+
+    for char in word:
+        if char.lower() in "aeiou":
+            has_vowel = True
+            break
+
+    if has_vowel:
+        count += 1
+
+print("Words containing a vowel:", count)
+
+#--------------------------------------------------------------------------
+# Check Whether Two Strings Have the Same Length
+#--------------------------------------------------------------------------
+
+text1 = input("Enter first string: ")
+text2 = input("Enter second string: ")
+
+if len(text1) == len(text2):
+    print("Both strings have the same length")
+else:
+    print("Both strings have different lengths")
+
+print("First string length:", len(text1))
+print("Second string length:", len(text2))
