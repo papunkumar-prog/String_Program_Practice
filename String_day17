@@ -1,0 +1,91 @@
+#---------------------------------------------------------------------------
+# Count How Many Times Each Word Appears
+#---------------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.lower().split()
+
+word_count = {}
+
+for word in words:
+    if word in word_count:
+        word_count[word] += 1
+    else:
+        word_count[word] = 1
+
+for word, count in word_count.items():
+    print(word, "=", count)
+
+#---------------------------------------------------------------------------
+# Find the First Vowel in a String
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+found = False
+
+for char in text:
+    if char.lower() in "aeiou":
+        print("First vowel:", char)
+        found = True
+        break
+
+if found == False:
+    print("No vowel found")
+
+#---------------------------------------------------------------------------
+# Print Only the Words With Numbers
+#---------------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.split()
+
+for word in words:
+    has_number = False
+
+    for char in word:
+        if char.isdigit():
+            has_number = True
+            break
+
+    if has_number:
+        print(word)
+
+#---------------------------------------------------------------------------
+# Sort the Words Alphabetically
+#---------------------------------------------------------------------------
+
+sentence = input("Enter a sentence: ")
+
+words = sentence.lower().split()
+
+words.sort()
+
+print("Words in alphabetical order:")
+
+for word in words:
+    print(word)
+
+#---------------------------------------------------------------------------
+# Remove All Special Characters
+#---------------------------------------------------------------------------
+
+text = input("Enter a string: ")
+
+result = ""
+
+for char in text:
+    if char.isalnum() or char == " ":
+        result += char
+
+print("Original:", text)
+print("After removing special characters:", result)
+
+#----------------------------------------------------
+
+Enter a string: Python@123#Code!
+
+Original: Python@123#Code!
+After removing special characters: Python123Code
