@@ -1,0 +1,391 @@
+# ============================================================
+
+# PRODUCT INVENTORY REST API
+
+# Simple Flask API project
+
+# ============================================================
+
+from flask import Flask, request, jsonify
+
+app = Flask(**name**)
+
+# Available product categories
+
+categories = (
+"Electronics",
+"Grocery",
+"Clothing",
+"Stationery"
+)
+
+# Product data
+
+products = [
+{
+"id": 101,
+"name": "Keyboard",
+"category": "Electronics",
+"price": 800,
+"stock": 10
+},
+{
+"id": 102,
+"name": "Mouse",
+"category": "Electronics",
+"price": 500,
+"stock": 15
+},
+{
+"id": 103,
+"name": "Notebook",
+"category": "Stationery",
+"price": 80,
+"stock": 50
+}
+]
+
+# ============================================================
+
+# FIND PRODUCT
+
+# ============================================================
+
+def find_product(product_id):
+
+```
+# Go through every product and check the ID
+for product in products:
+
+    if product["id"] == product_id:
+        return product
+
+return None
+```
+
+# ============================================================
+
+# GET ALL PRODUCTS
+
+# ============================================================
+
+@app.route("/api/products", methods=["GET"])
+def get_products():
+
+```
+# Send the complete product list
+return jsonify(products)
+```
+
+# ============================================================
+
+# GET ONE PRODUCT
+
+# ============================================================
+
+@app.route("/api/products/[int:product_id](int:product_id)", methods=["GET"])
+def get_product(product_id):
+
+```
+product = find_product(product_id)
+
+if product is None:
+
+    return jsonify({
+        "message": "Product not found"
+    }), 404
+
+return jsonify(product)
+```
+
+# ============================================================
+
+# ADD NEW PRODUCT
+
+# ============================================================
+
+@app.route("/api/products", methods=["POST"])
+def add_product():
+
+```
+# Get JSON data from request body
+data = request.get_json()
+
+# Check whether body is present
+if not data:
+
+    return jsonify({
+        "message": "Request body is required"
+    }), 400
+
+# Check required fields
+if "id" not in data:
+    return jsonify({
+        "message": "id is required"
+    }), 400
+
+if "name" not in data:
+    return jsonify({
+        "message": "name is required"
+    }), 400
+
+if "category" not in data:
+    return jsonify({
+        "message": "category is required"
+    }), 400
+
+if "price" not in data:
+    return jsonify({
+        "message": "price is required"
+    }), 400
+
+if "stock" not in data:
+    return jsonify({
+        "message": "stock is required"
+    }), 400
+
+# Check whether ID already exists
+old_product = find_product(data["id"])
+
+if old_product is not None:
+
+    return jsonify({
+        "message": "Product ID already exists"
+    }), 409
+
+# Check name
+if str(data["name"]).strip() == "":
+
+    return jsonify({
+        "message": "Product name cannot be empty"
+    }), 400
+
+# Check category
+if data["category"] not in categories:
+
+    return jsonify({
+        "message": "Invalid category",
+        "available_categories": categories
+    }), 400
+
+# Check price
+if data["price"] <= 0:
+
+    return jsonify({
+        "message": "Price must be greater than 0"
+    }), 400
+
+# Check stock
+if data["stock"] < 0:
+
+    return jsonify({
+        "message": "Stock cannot be negative"
+    }), 400
+
+# Create product
+product = {
+    "id": data["id"],
+    "name": data["name"],
+    "category": data["category"],
+    "price": data["price"],
+    "stock": data["stock"]
+}
+
+# Add product to list
+products.append(product)
+
+return jsonify({
+    "message": "Product added successfully",
+    "product": product
+}), 201
+```
+
+# ============================================================
+
+# UPDATE PRODUCT
+
+# ============================================================
+
+@app.route("/api/products/[int:product_id](int:product_id)", methods=["PUT"])
+def update_product(product_id):
+
+```
+# Find product first
+product = find_product(product_id)
+
+if product is None:
+
+    return jsonify({
+        "message": "Product not found"
+    }), 404
+
+# Get JSON data
+data = request.get_json()
+
+if not data:
+
+    return jsonify({
+        "message": "Request body is required"
+    }), 400
+
+# Update name
+if "name" in data:
+
+    if str(data["name"]).strip() == "":
+
+        return jsonify({
+            "message": "Name cannot be empty"
+        }), 400
+
+    product["name"] = data["name"]
+
+# Update category
+if "category" in data:
+
+    if data["category"] not in categories:
+
+        return jsonify({
+            "message": "Invalid category",
+            "available_categories": categories
+        }), 400
+
+    product["category"] = data["category"]
+
+# Update price
+if "price" in data:
+
+    if data["price"] <= 0:
+
+        return jsonify({
+            "message": "Price must be greater than 0"
+        }), 400
+
+    product["price"] = data["price"]
+
+# Update stock
+if "stock" in data:
+
+    if data["stock"] < 0:
+
+        return jsonify({
+            "message": "Stock cannot be negative"
+        }), 400
+
+    product["stock"] = data["stock"]
+
+return jsonify({
+    "message": "Product updated successfully",
+    "product": product
+})
+```
+
+# ============================================================
+
+# DELETE PRODUCT
+
+# ============================================================
+
+@app.route("/api/products/[int:product_id](int:product_id)", methods=["DELETE"])
+def delete_product(product_id):
+
+```
+product = find_product(product_id)
+
+if product is None:
+
+    return jsonify({
+        "message": "Product not found"
+    }), 404
+
+products.remove(product)
+
+return jsonify({
+    "message": "Product deleted successfully",
+    "product": product
+})
+```
+
+# ============================================================
+
+# SEARCH BY CATEGORY
+
+# ============================================================
+
+@app.route("/api/products/category/<category>", methods=["GET"])
+def products_by_category(category):
+
+```
+result = []
+
+# Search every product
+for product in products:
+
+    if product["category"].lower() == category.lower():
+
+        result.append(product)
+
+if len(result) == 0:
+
+    return jsonify({
+        "message": "No products found in this category"
+    }), 404
+
+return jsonify(result)
+```
+
+# ============================================================
+
+# LOW STOCK PRODUCTS
+
+# ============================================================
+
+@app.route("/api/products/low-stock", methods=["GET"])
+def low_stock_products():
+
+```
+result = []
+
+for product in products:
+
+    if product["stock"] <= 5:
+
+        result.append(product)
+
+return jsonify(result)
+```
+
+# ============================================================
+
+# HOME ROUTE
+
+# ============================================================
+
+@app.route("/", methods=["GET"])
+def home():
+
+```
+return jsonify({
+    "message": "Product Inventory API is running",
+    "endpoints": {
+        "all_products": "GET /api/products",
+        "one_product": "GET /api/products/<id>",
+        "add_product": "POST /api/products",
+        "update_product": "PUT /api/products/<id>",
+        "delete_product": "DELETE /api/products/<id>",
+        "category": "GET /api/products/category/<category>",
+        "low_stock": "GET /api/products/low-stock"
+    }
+})
+```
+
+# ============================================================
+
+# START FLASK SERVER
+
+# ============================================================
+
+if **name** == "**main**":
+
+```
+app.run(debug=True)
+```
