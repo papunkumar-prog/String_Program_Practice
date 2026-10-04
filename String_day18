@@ -1,0 +1,121 @@
+# String Analyzer Project
+
+# ==========================================
+# STRING ANALYZER PROJECT
+# ==========================================
+
+
+def count_characters(text):
+    print("\nTotal characters:", len(text))
+
+
+def count_words(text):
+    words = text.split()
+    print("Total words:", len(words))
+
+
+def count_vowels_consonants(text):
+    vowels = 0
+    consonants = 0
+
+    for char in text:
+        if char.isalpha():
+            if char.lower() in "aeiou":
+                vowels += 1
+            else:
+                consonants += 1
+
+    print("Vowels:", vowels)
+    print("Consonants:", consonants)
+
+
+def find_longest_word(text):
+    words = text.split()
+
+    if len(words) == 0:
+        print("No words found")
+        return
+
+    longest = words[0]
+
+    for word in words:
+        if len(word) > len(longest):
+            longest = word
+
+    print("Longest word:", longest)
+    print("Length:", len(longest))
+
+
+def reverse_sentence(text):
+    print("Reversed sentence:", text[::-1])
+
+
+def check_palindrome(text):
+    clean_text = text.replace(" ", "").lower()
+
+    if clean_text == clean_text[::-1]:
+        print("The sentence is a palindrome")
+    else:
+        print("The sentence is not a palindrome")
+
+
+def count_character(text):
+    char = input("Enter a character: ")
+
+    count = 0
+
+    for item in text:
+        if item.lower() == char.lower():
+            count += 1
+
+    print("Character", char, "appears", count, "time(s)")
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+text = input("Enter a sentence: ")
+
+while True:
+
+    print("\n========== STRING ANALYZER ==========")
+    print("1. Count characters")
+    print("2. Count words")
+    print("3. Count vowels and consonants")
+    print("4. Find longest word")
+    print("5. Reverse sentence")
+    print("6. Check palindrome")
+    print("7. Count a character")
+    print("8. Exit")
+    print("=====================================")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        count_characters(text)
+
+    elif choice == "2":
+        count_words(text)
+
+    elif choice == "3":
+        count_vowels_consonants(text)
+
+    elif choice == "4":
+        find_longest_word(text)
+
+    elif choice == "5":
+        reverse_sentence(text)
+
+    elif choice == "6":
+        check_palindrome(text)
+
+    elif choice == "7":
+        count_character(text)
+
+    elif choice == "8":
+        print("Thank you for using String Analyzer")
+        break
+
+    else:
+        print("Invalid choice. Please try again.")
