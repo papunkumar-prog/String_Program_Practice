@@ -1,0 +1,160 @@
+# Movie Watchlist Manager
+
+# ==========================================
+# MOVIE WATCHLIST MANAGER
+# ==========================================
+
+
+movies = []
+
+
+def add_movie():
+    name = input("Enter movie name: ").strip().title()
+    genre = input("Enter genre: ").strip().title()
+
+    if name == "" or genre == "":
+        print("Movie name and genre cannot be empty")
+        return
+
+    movie = {
+        "name": name,
+        "genre": genre,
+        "watched": False
+    }
+
+    movies.append(movie)
+
+    print("Movie added successfully")
+
+
+def view_movies():
+    if len(movies) == 0:
+        print("No movies in watchlist")
+        return
+
+    print("\n========== MOVIE LIST ==========")
+
+    for index, movie in enumerate(movies, start=1):
+
+        if movie["watched"]:
+            status = "Watched"
+        else:
+            status = "Not Watched"
+
+        print(
+            index,
+            movie["name"],
+            "-",
+            movie["genre"],
+            "-",
+            status
+        )
+
+
+def search_movie():
+    search = input("Enter movie name to search: ").strip().lower()
+
+    found = False
+
+    for movie in movies:
+        if search in movie["name"].lower():
+            print("\nMovie:", movie["name"])
+            print("Genre:", movie["genre"])
+
+            if movie["watched"]:
+                print("Status: Watched")
+            else:
+                print("Status: Not Watched")
+
+            found = True
+
+    if not found:
+        print("Movie not found")
+
+
+def mark_watched():
+    if len(movies) == 0:
+        print("No movies available")
+        return
+
+    view_movies()
+
+    choice = input("Enter movie number: ")
+
+    if choice.isdigit():
+
+        number = int(choice)
+
+        if number >= 1 and number <= len(movies):
+            movies[number - 1]["watched"] = True
+            print("Movie marked as watched")
+
+        else:
+            print("Invalid movie number")
+
+    else:
+        print("Please enter a number")
+
+
+def delete_movie():
+    if len(movies) == 0:
+        print("No movies available")
+        return
+
+    view_movies()
+
+    choice = input("Enter movie number to delete: ")
+
+    if choice.isdigit():
+
+        number = int(choice)
+
+        if number >= 1 and number <= len(movies):
+            deleted = movies.pop(number - 1)
+            print(deleted["name"], "deleted successfully")
+
+        else:
+            print("Invalid movie number")
+
+    else:
+        print("Please enter a number")
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+while True:
+
+    print("\n========== MOVIE WATCHLIST ==========")
+    print("1. Add Movie")
+    print("2. View Movies")
+    print("3. Search Movie")
+    print("4. Mark as Watched")
+    print("5. Delete Movie")
+    print("6. Exit")
+    print("=====================================")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        add_movie()
+
+    elif choice == "2":
+        view_movies()
+
+    elif choice == "3":
+        search_movie()
+
+    elif choice == "4":
+        mark_watched()
+
+    elif choice == "5":
+        delete_movie()
+
+    elif choice == "6":
+        print("Thank you for using Movie Watchlist")
+        break
+
+    else:
+        print("Invalid choice")
