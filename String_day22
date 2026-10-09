@@ -1,0 +1,121 @@
+# Python CLI Quiz Game
+# ==========================================
+# PYTHON CLI QUIZ GAME
+# ==========================================
+
+
+# Store questions, options, and correct answers
+questions = [
+    {
+        "question": "What is the correct file extension for Python?",
+        "options": ("A. .java", "B. .py", "C. .html", "D. .cpp"),
+        "answer": "B"
+    },
+    {
+        "question": "Which keyword is used to define a function?",
+        "options": ("A. function", "B. define", "C. def", "D. fun"),
+        "answer": "C"
+    },
+    {
+        "question": "Which data type stores key-value pairs?",
+        "options": ("A. List", "B. Tuple", "C. Set", "D. Dictionary"),
+        "answer": "D"
+    },
+    {
+        "question": "Which loop runs while a condition is true?",
+        "options": ("A. for", "B. while", "C. if", "D. def"),
+        "answer": "B"
+    },
+    {
+        "question": "Which method converts text to lowercase?",
+        "options": ("A. lower()", "B. upper()", "C. title()", "D. split()"),
+        "answer": "A"
+    }
+]
+
+
+# Execution flow:
+# 1. Display every question and its options.
+# 2. Accept the user's answer.
+# 3. Compare it with the correct answer.
+# 4. Increase the score for correct answers.
+# 5. Return the final score.
+def start_quiz():
+
+    score = 0
+
+    for number, item in enumerate(questions, start=1):
+
+        print("\nQuestion", number)
+        print(item["question"])
+
+        for option in item["options"]:
+            print(option)
+
+        answer = input("Enter your answer (A/B/C/D): ")
+        answer = answer.strip().upper()
+
+        # Keep asking until the user enters a valid option
+        while answer not in ("A", "B", "C", "D"):
+            print("Invalid choice. Enter A, B, C, or D.")
+            answer = input("Your answer: ").strip().upper()
+
+        if answer == item["answer"]:
+            print("Correct answer!")
+            score += 1
+        else:
+            print("Wrong answer!")
+            print("Correct answer:", item["answer"])
+
+    print("\n========== QUIZ RESULT ==========")
+    print("Total questions:", len(questions))
+    print("Correct answers:", score)
+    print("Wrong answers:", len(questions) - score)
+    print("Final score:", str(score) + "/" + str(len(questions)))
+
+    percentage = (score / len(questions)) * 100
+    print("Percentage:", round(percentage, 2), "%")
+
+    return score
+
+
+# Execution flow:
+# 1. Display the main menu.
+# 2. Read the user's choice.
+# 3. Start the quiz or show the last result.
+# 4. Exit when the user selects option 3.
+def main():
+
+    last_score = None
+
+    while True:
+
+        print("\n========== PYTHON QUIZ GAME ==========")
+        print("1. Start Quiz")
+        print("2. View Last Result")
+        print("3. Exit")
+        print("======================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            last_score = start_quiz()
+
+        elif choice == "2":
+
+            if last_score is None:
+                print("You have not played the quiz yet.")
+            else:
+                print("Your last score:", last_score,
+                      "/", len(questions))
+
+        elif choice == "3":
+            print("Thank you for playing!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1, 2, or 3.")
+
+
+# Start program execution
+main()
