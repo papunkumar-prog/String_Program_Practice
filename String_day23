@@ -1,0 +1,218 @@
+# Shopping Cart & Billing System
+
+# ==========================================
+# SHOPPING CART AND BILLING SYSTEM
+# ==========================================
+
+# Store available products
+products = [
+    {"id": 1, "name": "Notebook", "price": 50},
+    {"id": 2, "name": "Pen", "price": 10},
+    {"id": 3, "name": "School Bag", "price": 600},
+    {"id": 4, "name": "Water Bottle", "price": 150},
+    {"id": 5, "name": "Pencil", "price": 5}
+]
+
+# Store products selected by the customer
+cart = []
+
+
+# Execution flow:
+# 1. Display all available products.
+# 2. Print each product's ID, name, and price.
+def view_products():
+
+    print("\n========== AVAILABLE PRODUCTS ==========")
+
+    for product in products:
+        print(
+            product["id"],
+            product["name"],
+            "- ₹",
+            product["price"]
+        )
+
+
+# Execution flow:
+# 1. Ask for a product ID and quantity.
+# 2. Find the selected product.
+# 3. Add it to the cart or increase its quantity.
+def add_to_cart():
+
+    view_products()
+
+    product_id = input("\nEnter product ID: ").strip()
+    quantity = input("Enter quantity: ").strip()
+
+    if not product_id.isdigit() or not quantity.isdigit():
+        print("Please enter valid numbers.")
+        return
+
+    product_id = int(product_id)
+    quantity = int(quantity)
+
+    if quantity <= 0:
+        print("Quantity must be greater than zero.")
+        return
+
+    selected_product = None
+
+    for product in products:
+        if product["id"] == product_id:
+            selected_product = product
+            break
+
+    if selected_product is None:
+        print("Product not found.")
+        return
+
+    # Check whether the product is already in the cart
+    found = False
+
+    for item in cart:
+        if item["id"] == product_id:
+            item["quantity"] += quantity
+            found = True
+            break
+
+    # Add a new product if it is not already in the cart
+    if not found:
+        cart.append({
+            "id": selected_product["id"],
+            "name": selected_product["name"],
+            "price": selected_product["price"],
+            "quantity": quantity
+        })
+
+    print("Product added to cart successfully.")
+
+
+# Execution flow:
+# 1. Check whether the cart has products.
+# 2. Display each product and its quantity.
+# 3. Calculate and display the total amount.
+def view_cart():
+
+    if len(cart) == 0:
+        print("\nYour cart is empty.")
+        return
+
+    total = 0
+
+    print("\n============== YOUR CART ==============")
+
+    for number, item in enumerate(cart, start=1):
+
+        amount = item["price"] * item["quantity"]
+        total += amount
+
+        print(
+            number,
+            item["name"],
+            "| Price: ₹", item["price"],
+            "| Quantity:", item["quantity"],
+            "| Amount: ₹", amount
+        )
+
+    print("---------------------------------------")
+    print("Cart total: ₹", total)
+
+
+# Execution flow:
+# 1. Display the current cart.
+# 2. Ask which cart item to remove.
+# 3. Remove the selected item if the number is valid.
+def remove_from_cart():
+
+    if len(cart) == 0:
+        print("Your cart is empty.")
+        return
+
+    view_cart()
+
+    choice = input("\nEnter item number to remove: ").strip()
+
+    if not choice.isdigit():
+        print("Please enter a valid number.")
+        return
+
+    item_number = int(choice)
+
+    if 1 <= item_number <= len(cart):
+        removed_item = cart.pop(item_number - 1)
+        print(removed_item["name"], "removed from cart.")
+    else:
+        print("Invalid item number.")
+
+
+# Execution flow:
+# 1. Check whether the cart is empty.
+# 2. Calculate the total amount.
+# 3. Display the bill.
+# 4. Clear the cart after checkout.
+def checkout():
+
+    if len(cart) == 0:
+        print("Your cart is empty. Add products first.")
+        return
+
+    total = 0
+
+    print("\n=========== FINAL BILL ===========")
+
+    for item in cart:
+
+        amount = item["price"] * item["quantity"]
+        total += amount
+
+        print(
+            item["name"],
+            "x", item["quantity"],
+            "= ₹", amount
+        )
+
+    print("----------------------------------")
+    print("Total amount: ₹", total)
+    print("Thank you for shopping!")
+
+    cart.clear()
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+while True:
+
+    print("\n========== SHOPPING SYSTEM ==========")
+    print("1. View Products")
+    print("2. Add to Cart")
+    print("3. View Cart")
+    print("4. Remove from Cart")
+    print("5. Checkout")
+    print("6. Exit")
+    print("=====================================")
+
+    choice = input("Enter your choice: ").strip()
+
+    if choice == "1":
+        view_products()
+
+    elif choice == "2":
+        add_to_cart()
+
+    elif choice == "3":
+        view_cart()
+
+    elif choice == "4":
+        remove_from_cart()
+
+    elif choice == "5":
+        checkout()
+
+    elif choice == "6":
+        print("Thank you for using the Shopping System!")
+        break
+
+    else:
+        print("Invalid choice. Please try again.")
