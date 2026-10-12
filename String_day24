@@ -1,0 +1,169 @@
+
+# ==========================================
+# DAILY TASK MANAGER
+# ==========================================
+
+tasks = []
+
+
+# Execution flow:
+# 1. Ask the user for a task.
+# 2. Check whether the task is empty.
+# 3. Store the task in the list.
+def add_task():
+
+    task_name = input("Enter task name: ").strip()
+
+    if task_name == "":
+        print("Task name cannot be empty.")
+        return
+
+    task = {
+        "name": task_name,
+        "completed": False
+    }
+
+    tasks.append(task)
+
+    print("Task added successfully!")
+
+
+# Execution flow:
+# 1. Check whether tasks are available.
+# 2. Display each task with its status.
+def view_tasks():
+
+    if len(tasks) == 0:
+        print("No tasks available.")
+        return
+
+    print("\n========== ALL TASKS ==========")
+
+    for number, task in enumerate(tasks, start=1):
+
+        if task["completed"]:
+            status = "Completed"
+        else:
+            status = "Pending"
+
+        print(number, "-", task["name"], "|", status)
+
+
+# Execution flow:
+# 1. Display the available tasks.
+# 2. Ask for the task number.
+# 3. Validate the number.
+# 4. Update the task status.
+def complete_task():
+
+    if len(tasks) == 0:
+        print("No tasks available.")
+        return
+
+    view_tasks()
+
+    choice = input("Enter task number to complete: ").strip()
+
+    if not choice.isdigit():
+        print("Please enter a valid number.")
+        return
+
+    number = int(choice)
+
+    if 1 <= number <= len(tasks):
+
+        tasks[number - 1]["completed"] = True
+
+        print("Task marked as completed!")
+
+    else:
+        print("Invalid task number.")
+
+
+# Execution flow:
+# 1. Display all tasks.
+# 2. Ask for a task number.
+# 3. Remove the selected task.
+def delete_task():
+
+    if len(tasks) == 0:
+        print("No tasks available.")
+        return
+
+    view_tasks()
+
+    choice = input("Enter task number to delete: ").strip()
+
+    if not choice.isdigit():
+        print("Please enter a valid number.")
+        return
+
+    number = int(choice)
+
+    if 1 <= number <= len(tasks):
+
+        deleted_task = tasks.pop(number - 1)
+
+        print(deleted_task["name"], "deleted successfully.")
+
+    else:
+        print("Invalid task number.")
+
+
+# Execution flow:
+# 1. Check the task list.
+# 2. Display tasks that are not completed.
+def view_pending_tasks():
+
+    pending_found = False
+
+    print("\n========== PENDING TASKS ==========")
+
+    for number, task in enumerate(tasks, start=1):
+
+        if not task["completed"]:
+            print(number, "-", task["name"])
+            pending_found = True
+
+    if not pending_found:
+        print("No pending tasks!")
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+while True:
+
+    print("\n========== DAILY TASK MANAGER ==========")
+    print("1. Add Task")
+    print("2. View All Tasks")
+    print("3. Complete Task")
+    print("4. View Pending Tasks")
+    print("5. Delete Task")
+    print("6. Exit")
+    print("========================================")
+
+    choice = input("Enter your choice: ").strip()
+
+    if choice == "1":
+        add_task()
+
+    elif choice == "2":
+        view_tasks()
+
+    elif choice == "3":
+        complete_task()
+
+    elif choice == "4":
+        view_pending_tasks()
+
+    elif choice == "5":
+        delete_task()
+
+    elif choice == "6":
+        print("Thank you for using Daily Task Manager!")
+        break
+
+    else:
+        print("Invalid choice. Please select 1 to 6.")
