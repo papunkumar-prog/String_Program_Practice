@@ -1,0 +1,147 @@
+# ==========================================
+# BANK ATM SIMULATOR
+# ==========================================
+
+account = {
+    "balance": 5000
+}
+
+transactions = []
+
+
+# Execution flow:
+# 1. Read the current account balance.
+# 2. Display the balance to the user.
+def check_balance():
+
+    print("\nCurrent balance: ₹", account["balance"])
+
+
+# Execution flow:
+# 1. Ask the user for a deposit amount.
+# 2. Validate the amount.
+# 3. Add the amount to the balance.
+# 4. Record the transaction.
+def deposit_money():
+
+    amount = input("Enter deposit amount: ").strip()
+
+    if not amount.isdigit():
+        print("Please enter a valid whole number.")
+        return
+
+    amount = int(amount)
+
+    if amount <= 0:
+        print("Amount must be greater than zero.")
+        return
+
+    account["balance"] += amount
+
+    transactions.append({
+        "type": "Deposit",
+        "amount": amount,
+        "balance": account["balance"]
+    })
+
+    print("Money deposited successfully!")
+    print("Current balance: ₹", account["balance"])
+
+
+# Execution flow:
+# 1. Ask the user for a withdrawal amount.
+# 2. Validate the amount.
+# 3. Check whether enough money is available.
+# 4. Update the balance and record the transaction.
+def withdraw_money():
+
+    amount = input("Enter withdrawal amount: ").strip()
+
+    if not amount.isdigit():
+        print("Please enter a valid whole number.")
+        return
+
+    amount = int(amount)
+
+    if amount <= 0:
+        print("Amount must be greater than zero.")
+        return
+
+    if amount > account["balance"]:
+        print("Insufficient balance.")
+        return
+
+    account["balance"] -= amount
+
+    transactions.append({
+        "type": "Withdrawal",
+        "amount": amount,
+        "balance": account["balance"]
+    })
+
+    print("Please collect your money.")
+    print("Remaining balance: ₹", account["balance"])
+
+
+# Execution flow:
+# 1. Check whether any transactions exist.
+# 2. Display each transaction.
+# 3. Show the balance after each transaction.
+def view_transactions():
+
+    if len(transactions) == 0:
+        print("No transactions available.")
+        return
+
+    print("\n========== TRANSACTION HISTORY ==========")
+
+    for number, transaction in enumerate(transactions, start=1):
+
+        print("\nTransaction:", number)
+        print("Type:", transaction["type"])
+        print("Amount: ₹", transaction["amount"])
+        print("Balance after transaction: ₹",
+              transaction["balance"])
+
+
+# Execution flow:
+# 1. Display the ATM menu.
+# 2. Accept the user's choice.
+# 3. Call the selected function.
+# 4. Stop the program when the user exits.
+def main():
+
+    while True:
+
+        print("\n========== BANK ATM ==========")
+        print("1. Check Balance")
+        print("2. Deposit Money")
+        print("3. Withdraw Money")
+        print("4. View Transaction History")
+        print("5. Exit")
+        print("==============================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            check_balance()
+
+        elif choice == "2":
+            deposit_money()
+
+        elif choice == "3":
+            withdraw_money()
+
+        elif choice == "4":
+            view_transactions()
+
+        elif choice == "5":
+            print("Thank you for using the Bank ATM.")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 5.")
+
+
+# Start program execution
+main()
