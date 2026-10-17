@@ -1,0 +1,211 @@
+# ==========================================
+# EMPLOYEE ATTENDANCE MANAGEMENT SYSTEM
+# ==========================================
+
+employees = []
+
+
+# Execution flow:
+# 1. Accept the employee's name.
+# 2. Validate the name.
+# 3. Generate an employee ID.
+# 4. Store the employee in the list.
+def add_employee():
+
+    name = input("Enter employee name: ").strip()
+
+    if name == "":
+        print("Employee name cannot be empty.")
+        return
+
+    # Prevent duplicate employee names
+    for employee in employees:
+        if employee["name"].lower() == name.lower():
+            print("This employee already exists.")
+            return
+
+    employee_id = 1
+
+    for employee in employees:
+        if employee["id"] >= employee_id:
+            employee_id = employee["id"] + 1
+
+    new_employee = {
+        "id": employee_id,
+        "name": name.title(),
+        "attendance": "Not Marked"
+    }
+
+    employees.append(new_employee)
+
+    print("Employee added successfully!")
+    print("Employee ID:", employee_id)
+
+
+# Execution flow:
+# 1. Check whether employees exist.
+# 2. Display each employee and attendance status.
+def view_employees():
+
+    if len(employees) == 0:
+        print("No employees available.")
+        return
+
+    print("\n========== EMPLOYEE LIST ==========")
+
+    for employee in employees:
+        print("ID:", employee["id"])
+        print("Name:", employee["name"])
+        print("Attendance:", employee["attendance"])
+        print("-----------------------------------")
+
+
+# Execution flow:
+# 1. Ask for the employee ID.
+# 2. Find the matching employee.
+# 3. Ask for Present or Absent.
+# 4. Update the attendance status.
+def mark_attendance():
+
+    if len(employees) == 0:
+        print("Add employees first.")
+        return
+
+    view_employees()
+
+    employee_id = input(
+        "Enter employee ID: "
+    ).strip()
+
+    if not employee_id.isdigit():
+        print("Please enter a valid employee ID.")
+        return
+
+    employee_id = int(employee_id)
+
+    selected_employee = None
+
+    for employee in employees:
+        if employee["id"] == employee_id:
+            selected_employee = employee
+            break
+
+    if selected_employee is None:
+        print("Employee ID not found.")
+        return
+
+    print("1. Present")
+    print("2. Absent")
+
+    choice = input("Select attendance: ").strip()
+
+    if choice == "1":
+        selected_employee["attendance"] = "Present"
+        print("Attendance marked as Present.")
+
+    elif choice == "2":
+        selected_employee["attendance"] = "Absent"
+        print("Attendance marked as Absent.")
+
+    else:
+        print("Invalid attendance choice.")
+
+
+# Execution flow:
+# 1. Accept a name to search.
+# 2. Compare it with stored employee names.
+# 3. Display matching employee details.
+def search_employee():
+
+    search_name = input(
+        "Enter employee name to search: "
+    ).strip().lower()
+
+    if search_name == "":
+        print("Search name cannot be empty.")
+        return
+
+    found = False
+
+    for employee in employees:
+
+        if search_name in employee["name"].lower():
+
+            print("\nEmployee found!")
+            print("ID:", employee["id"])
+            print("Name:", employee["name"])
+            print("Attendance:", employee["attendance"])
+
+            found = True
+
+    if not found:
+        print("Employee not found.")
+
+
+# Execution flow:
+# 1. Count Present employees.
+# 2. Count Absent employees.
+# 3. Count employees whose attendance is not marked.
+# 4. Display the summary.
+def attendance_summary():
+
+    present = 0
+    absent = 0
+    not_marked = 0
+
+    for employee in employees:
+
+        if employee["attendance"] == "Present":
+            present += 1
+
+        elif employee["attendance"] == "Absent":
+            absent += 1
+
+        else:
+            not_marked += 1
+
+    print("\n========== ATTENDANCE SUMMARY ==========")
+    print("Total employees:", len(employees))
+    print("Present:", present)
+    print("Absent:", absent)
+    print("Not marked:", not_marked)
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+while True:
+
+    print("\n========== ATTENDANCE SYSTEM ==========")
+    print("1. Add Employee")
+    print("2. View Employees")
+    print("3. Mark Attendance")
+    print("4. Search Employee")
+    print("5. Attendance Summary")
+    print("6. Exit")
+    print("=======================================")
+
+    choice = input("Enter your choice: ").strip()
+
+    if choice == "1":
+        add_employee()
+
+    elif choice == "2":
+        view_employees()
+
+    elif choice == "3":
+        mark_attendance()
+
+    elif choice == "4":
+        search_employee()
+
+    elif choice == "5":
+        attendance_summary()
+
+    elif choice == "6":
+        print("Thank you for using Attendance System!")
+        break
+
+    else:
+        print("Invalid choice. Please select 1 to 6.")
