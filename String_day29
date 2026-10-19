@@ -1,0 +1,282 @@
+# ==========================================
+# IT HELP DESK TICKET MANAGEMENT SYSTEM
+# ==========================================
+
+tickets = []
+
+
+# Execution flow:
+# 1. Get the user's issue details.
+# 2. Validate the entered information.
+# 3. Generate a unique ticket ID.
+# 4. Store the ticket in the list.
+def create_ticket():
+
+    issue = input("Enter the issue description: ").strip()
+
+    if issue == "":
+        print("Issue description cannot be empty.")
+        return
+
+    print("\nSelect priority:")
+    print("1. Low")
+    print("2. Medium")
+    print("3. High")
+
+    choice = input("Enter priority: ").strip()
+
+    if choice == "1":
+        priority = "Low"
+    elif choice == "2":
+        priority = "Medium"
+    elif choice == "3":
+        priority = "High"
+    else:
+        print("Invalid priority.")
+        return
+
+    # Generate a ticket ID that is not already in use
+    ticket_id = 1
+
+    for ticket in tickets:
+        if ticket["id"] >= ticket_id:
+            ticket_id = ticket["id"] + 1
+
+    new_ticket = {
+        "id": ticket_id,
+        "issue": issue,
+        "priority": priority,
+        "status": "Open"
+    }
+
+    tickets.append(new_ticket)
+
+    print("\nTicket created successfully!")
+    print("Ticket ID:", ticket_id)
+
+
+# Execution flow:
+# 1. Check whether tickets exist.
+# 2. Display ticket details.
+# 3. Show the current status and priority.
+def view_tickets():
+
+    if len(tickets) == 0:
+        print("No tickets available.")
+        return
+
+    print("\n========== ALL SUPPORT TICKETS ==========")
+
+    for ticket in tickets:
+        print("\nTicket ID:", ticket["id"])
+        print("Issue:", ticket["issue"])
+        print("Priority:", ticket["priority"])
+        print("Status:", ticket["status"])
+        print("-----------------------------------------")
+
+
+# Execution flow:
+# 1. Ask the user for a ticket ID.
+# 2. Validate the entered ID.
+# 3. Find and display the matching ticket.
+def search_ticket():
+
+    ticket_id = input("Enter ticket ID: ").strip()
+
+    if not ticket_id.isdigit():
+        print("Please enter a valid ticket ID.")
+        return
+
+    ticket_id = int(ticket_id)
+
+    for ticket in tickets:
+        if ticket["id"] == ticket_id:
+            print("\nTicket found!")
+            print("Ticket ID:", ticket["id"])
+            print("Issue:", ticket["issue"])
+            print("Priority:", ticket["priority"])
+            print("Status:", ticket["status"])
+            return
+
+    print("Ticket not found.")
+
+
+# Execution flow:
+# 1. Display available tickets.
+# 2. Ask which ticket needs updating.
+# 3. Find the ticket by ID.
+# 4. Update its status.
+def update_ticket():
+
+    if len(tickets) == 0:
+        print("No tickets available.")
+        return
+
+    view_tickets()
+
+    ticket_id = input("\nEnter ticket ID to update: ").strip()
+
+    if not ticket_id.isdigit():
+        print("Please enter a valid ticket ID.")
+        return
+
+    ticket_id = int(ticket_id)
+
+    selected_ticket = None
+
+    for ticket in tickets:
+        if ticket["id"] == ticket_id:
+            selected_ticket = ticket
+            break
+
+    if selected_ticket is None:
+        print("Ticket not found.")
+        return
+
+    print("\nSelect new status:")
+    print("1. Open")
+    print("2. In Progress")
+    print("3. Resolved")
+
+    choice = input("Enter your choice: ").strip()
+
+    if choice == "1":
+        selected_ticket["status"] = "Open"
+
+    elif choice == "2":
+        selected_ticket["status"] = "In Progress"
+
+    elif choice == "3":
+        selected_ticket["status"] = "Resolved"
+
+    else:
+        print("Invalid status choice.")
+        return
+
+    print("Ticket status updated successfully!")
+
+
+# Execution flow:
+# 1. Display the available tickets.
+# 2. Ask for the ticket ID to delete.
+# 3. Find the matching ticket.
+# 4. Remove the ticket from the list.
+def delete_ticket():
+
+    if len(tickets) == 0:
+        print("No tickets available.")
+        return
+
+    view_tickets()
+
+    ticket_id = input("\nEnter ticket ID to delete: ").strip()
+
+    if not ticket_id.isdigit():
+        print("Please enter a valid ticket ID.")
+        return
+
+    ticket_id = int(ticket_id)
+
+    for index, ticket in enumerate(tickets):
+        if ticket["id"] == ticket_id:
+            deleted_ticket = tickets.pop(index)
+            print(
+                "Ticket",
+                deleted_ticket["id"],
+                "deleted successfully."
+            )
+            return
+
+    print("Ticket not found.")
+
+
+# Execution flow:
+# 1. Count tickets by status.
+# 2. Count tickets by priority.
+# 3. Display the summary.
+def ticket_summary():
+
+    open_count = 0
+    progress_count = 0
+    resolved_count = 0
+
+    low_count = 0
+    medium_count = 0
+    high_count = 0
+
+    for ticket in tickets:
+
+        if ticket["status"] == "Open":
+            open_count += 1
+
+        elif ticket["status"] == "In Progress":
+            progress_count += 1
+
+        elif ticket["status"] == "Resolved":
+            resolved_count += 1
+
+        if ticket["priority"] == "Low":
+            low_count += 1
+
+        elif ticket["priority"] == "Medium":
+            medium_count += 1
+
+        elif ticket["priority"] == "High":
+            high_count += 1
+
+    print("\n========== TICKET SUMMARY ==========")
+    print("Total tickets:", len(tickets))
+
+    print("\nBy status:")
+    print("Open:", open_count)
+    print("In Progress:", progress_count)
+    print("Resolved:", resolved_count)
+
+    print("\nBy priority:")
+    print("Low:", low_count)
+    print("Medium:", medium_count)
+    print("High:", high_count)
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+while True:
+
+    print("\n========== IT HELP DESK SYSTEM ==========")
+    print("1. Create Ticket")
+    print("2. View All Tickets")
+    print("3. Search Ticket")
+    print("4. Update Ticket Status")
+    print("5. Delete Ticket")
+    print("6. View Ticket Summary")
+    print("7. Exit")
+    print("==========================================")
+
+    choice = input("Enter your choice: ").strip()
+
+    if choice == "1":
+        create_ticket()
+
+    elif choice == "2":
+        view_tickets()
+
+    elif choice == "3":
+        search_ticket()
+
+    elif choice == "4":
+        update_ticket()
+
+    elif choice == "5":
+        delete_ticket()
+
+    elif choice == "6":
+        ticket_summary()
+
+    elif choice == "7":
+        print("Thank you for using the Help Desk System!")
+        break
+
+    else:
+        print("Invalid choice. Please select 1 to 7.")
