@@ -1,0 +1,110 @@
+# ==========================================
+# TYPING SPEED TESTER
+# ==========================================
+
+import random
+import time
+
+
+sentences = [
+    "Python is easy to learn and use",
+    "Practice makes programming better",
+    "Learning new skills takes time",
+    "Consistency is the key to success",
+    "Write code and improve every day"
+]
+
+
+# Execution flow:
+# 1. Select a random sentence.
+# 2. Ask the user to type the sentence.
+# 3. Calculate the time taken.
+# 4. Calculate typing speed and accuracy.
+# 5. Display the final result.
+def start_test():
+
+    sentence = random.choice(sentences)
+
+    print("\nType the following sentence:")
+    print("--------------------------------")
+    print(sentence)
+    print("--------------------------------")
+
+    start_time = time.time()
+
+    typed_text = input("Start typing: ")
+
+    end_time = time.time()
+
+    time_taken = end_time - start_time
+
+    # Prevent division by zero
+    if time_taken <= 0:
+        time_taken = 0.01
+
+    # Calculate typing speed
+    words = typed_text.split()
+    total_words = len(words)
+
+    minutes = time_taken / 60
+    wpm = total_words / minutes
+
+    # Calculate typing accuracy character by character
+    correct_chars = 0
+
+    for i in range(min(len(sentence), len(typed_text))):
+        if sentence[i] == typed_text[i]:
+            correct_chars += 1
+
+    total_chars = max(len(sentence), len(typed_text))
+
+    if total_chars > 0:
+        accuracy = (correct_chars / total_chars) * 100
+    else:
+        accuracy = 0
+
+    # Display the result
+    print("\n========== TEST RESULT ==========")
+    print("Time taken:", round(time_taken, 2), "seconds")
+    print("Words typed:", total_words)
+    print("Typing speed:", round(wpm, 2), "WPM")
+    print("Typing accuracy:", round(accuracy, 2), "%")
+
+    if accuracy >= 95:
+        print("Performance: Excellent!")
+    elif accuracy >= 80:
+        print("Performance: Good!")
+    else:
+        print("Performance: Keep practicing!")
+
+    print("=================================")
+
+
+# Execution flow:
+# 1. Display the menu.
+# 2. Start the typing test when selected.
+# 3. Repeat until the user chooses Exit.
+def main():
+
+    while True:
+
+        print("\n========== TYPING SPEED TESTER ==========")
+        print("1. Start Typing Test")
+        print("2. Exit")
+        print("=========================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            start_test()
+
+        elif choice == "2":
+            print("Thank you for using Typing Speed Tester!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 or 2.")
+
+
+# Start program execution
+main()
