@@ -1,0 +1,151 @@
+# ==========================================
+# TIC-TAC-TOE GAME
+# ==========================================
+
+
+# Create an empty board with positions 1 to 9
+board = [str(number) for number in range(1, 10)]
+
+
+# Execution flow:
+# 1. Display the current board.
+# 2. Show the available positions.
+# 3. Print the board in a 3x3 format.
+def display_board():
+
+    print("\n")
+
+    print(" " + board[0] + " | " + board[1] + " | " + board[2])
+    print("---+---+---")
+    print(" " + board[3] + " | " + board[4] + " | " + board[5])
+    print("---+---+---")
+    print(" " + board[6] + " | " + board[7] + " | " + board[8])
+
+    print("\n")
+
+
+# Execution flow:
+# 1. Check all possible winning combinations.
+# 2. Compare each combination with the player's symbol.
+# 3. Return True if the player has won.
+def check_winner(symbol):
+
+    winning_positions = [
+        (0, 1, 2),
+        (3, 4, 5),
+        (6, 7, 8),
+        (0, 3, 6),
+        (1, 4, 7),
+        (2, 5, 8),
+        (0, 4, 8),
+        (2, 4, 6)
+    ]
+
+    for position in winning_positions:
+
+        if (
+            board[position[0]] == symbol
+            and board[position[1]] == symbol
+            and board[position[2]] == symbol
+        ):
+            return True
+
+    return False
+
+
+# Execution flow:
+# 1. Reset the board for a new game.
+# 2. Ask each player to choose a position.
+# 3. Validate the position and update the board.
+# 4. Check for a winner or a draw.
+def play_game():
+
+    global board
+
+    board = [str(number) for number in range(1, 10)]
+
+    current_player = "X"
+
+    while True:
+
+        display_board()
+
+        if current_player == "X":
+            print("Player 1's turn (X)")
+        else:
+            print("Player 2's turn (O)")
+
+        choice = input("Choose a position (1-9): ").strip()
+
+        # Validate the input
+        if not choice.isdigit():
+            print("Please enter a number.")
+            continue
+
+        position = int(choice)
+
+        if position < 1 or position > 9:
+            print("Choose a position between 1 and 9.")
+            continue
+
+        # Check whether the position is already occupied
+        if board[position - 1] in ["X", "O"]:
+            print("That position is already occupied.")
+            continue
+
+        # Place the player's symbol on the board
+        board[position - 1] = current_player
+
+        # Check whether the current player has won
+        if check_winner(current_player):
+
+            display_board()
+
+            if current_player == "X":
+                print("Congratulations! Player 1 wins!")
+            else:
+                print("Congratulations! Player 2 wins!")
+
+            break
+
+        # Check whether all positions are occupied
+        if all(cell in ["X", "O"] for cell in board):
+
+            display_board()
+            print("It's a draw!")
+
+            break
+
+        # Switch to the other player
+        if current_player == "X":
+            current_player = "O"
+        else:
+            current_player = "X"
+
+
+# Execution flow:
+# 1. Start a new game.
+# 2. Ask whether the users want to play again.
+# 3. Exit when they choose not to continue.
+def main():
+
+    while True:
+
+        print("\n========== TIC-TAC-TOE ==========")
+        print("Player 1: X")
+        print("Player 2: O")
+        print("=================================")
+
+        play_game()
+
+        answer = input(
+            "\nDo you want to play again? (yes/no): "
+        ).strip().lower()
+
+        if answer != "yes":
+            print("Thanks for playing Tic-Tac-Toe!")
+            break
+
+
+# Start program execution
+main()
