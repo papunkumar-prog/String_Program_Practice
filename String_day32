@@ -1,0 +1,116 @@
+
+# ==========================================
+# HANGMAN WORD GUESSING GAME
+# ==========================================
+
+import random
+
+
+# Store words and their hints
+words = [
+    {"word": "python", "hint": "A programming language"},
+    {"word": "laptop", "hint": "A portable computer"},
+    {"word": "school", "hint": "A place where students learn"},
+    {"word": "banana", "hint": "A yellow fruit"},
+    {"word": "office", "hint": "A place where many people work"},
+    {"word": "guitar", "hint": "A musical instrument"}
+]
+
+
+# Execution flow:
+# 1. Select a random word.
+# 2. Display a hint.
+# 3. Ask the user to guess letters.
+# 4. Reduce attempts for incorrect guesses.
+# 5. Check whether the user wins or loses.
+def play_game():
+
+    selected = random.choice(words)
+
+    word = selected["word"]
+    hint = selected["hint"]
+
+    guessed_letters = []
+    attempts_left = 6
+
+    print("\n========== HANGMAN GAME ==========")
+    print("Hint:", hint)
+    print("You have 6 incorrect guesses available.")
+
+    while attempts_left > 0:
+
+        # Display guessed and hidden letters
+        display_word = ""
+
+        for char in word:
+            if char in guessed_letters:
+                display_word += char + " "
+            else:
+                display_word += "_ "
+
+        print("\nWord:", display_word)
+        print("Attempts left:", attempts_left)
+
+        if guessed_letters:
+            print("Guessed letters:", ", ".join(guessed_letters))
+
+        # Check whether every letter has been guessed
+        if all(char in guessed_letters for char in word):
+            print("\nCongratulations! You guessed the word!")
+            print("The word was:", word)
+            return
+
+        guess = input("Guess one letter: ").strip().lower()
+
+        # Validate the user's input
+        if len(guess) != 1 or not guess.isalpha():
+            print("Please enter only one letter.")
+            continue
+
+        # Prevent guessing the same letter twice
+        if guess in guessed_letters:
+            print("You have already guessed that letter.")
+            continue
+
+        guessed_letters.append(guess)
+
+        # Check whether the guessed letter is in the word
+        if guess in word:
+            print("Correct guess!")
+        else:
+            print("Wrong guess!")
+            attempts_left -= 1
+
+    # This section runs when all attempts are used
+    print("\nGame over!")
+    print("The correct word was:", word)
+
+
+# Execution flow:
+# 1. Display the main menu.
+# 2. Start a new game or exit.
+# 3. Continue showing the menu until the user exits.
+def main():
+
+    while True:
+
+        print("\n========== HANGMAN MENU ==========")
+        print("1. Start Game")
+        print("2. Exit")
+        print("==================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            play_game()
+
+        elif choice == "2":
+            print("Thanks for playing Hangman!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 or 2.")
+
+
+# Start program execution
+main()
