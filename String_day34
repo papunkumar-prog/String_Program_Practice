@@ -1,0 +1,233 @@
+
+# ==========================================
+# INVENTORY STOCK MANAGEMENT SYSTEM
+# ==========================================
+
+inventory = []
+
+
+# Execution flow:
+# 1. Accept product details from the user.
+# 2. Validate the entered values.
+# 3. Generate a unique product ID.
+# 4. Store the product in inventory.
+def add_product():
+
+    name = input("Enter product name: ").strip()
+    price = input("Enter product price: ").strip()
+    quantity = input("Enter opening stock quantity: ").strip()
+
+    if name == "":
+        print("Product name cannot be empty.")
+        return
+
+    if not price.isdigit() or not quantity.isdigit():
+        print("Price and quantity must be whole numbers.")
+        return
+
+    price = int(price)
+    quantity = int(quantity)
+
+    if price <= 0:
+        print("Price must be greater than zero.")
+        return
+
+    if quantity < 0:
+        print("Quantity cannot be negative.")
+        return
+
+    # Generate the next available product ID
+    product_id = 1
+
+    for product in inventory:
+        if product["id"] >= product_id:
+            product_id = product["id"] + 1
+
+    product = {
+        "id": product_id,
+        "name": name.title(),
+        "price": price,
+        "quantity": quantity
+    }
+
+    inventory.append(product)
+
+    print("Product added successfully!")
+    print("Product ID:", product_id)
+
+
+# Execution flow:
+# 1. Check whether inventory contains products.
+# 2. Display the details of each product.
+def view_inventory():
+
+    if len(inventory) == 0:
+        print("Inventory is empty.")
+        return
+
+    print("\n========== INVENTORY ==========")
+
+    for product in inventory:
+        print("ID:", product["id"])
+        print("Name:", product["name"])
+        print("Price: Rs.", product["price"])
+        print("Stock:", product["quantity"])
+        print("--------------------------------")
+
+
+# Execution flow:
+# 1. Ask for the product ID and selling quantity.
+# 2. Find the selected product.
+# 3. Check whether enough stock is available.
+# 4. Reduce the stock after the sale.
+def sell_product():
+
+    if len(inventory) == 0:
+        print("No products available.")
+        return
+
+    product_id = input("Enter product ID: ").strip()
+    quantity = input("Enter quantity to sell: ").strip()
+
+    if not product_id.isdigit() or not quantity.isdigit():
+        print("Please enter valid numbers.")
+        return
+
+    product_id = int(product_id)
+    quantity = int(quantity)
+
+    if quantity <= 0:
+        print("Selling quantity must be greater than zero.")
+        return
+
+    selected_product = None
+
+    for product in inventory:
+        if product["id"] == product_id:
+            selected_product = product
+            break
+
+    if selected_product is None:
+        print("Product not found.")
+        return
+
+    if quantity > selected_product["quantity"]:
+        print("Insufficient stock.")
+        print("Available quantity:", selected_product["quantity"])
+        return
+
+    selected_product["quantity"] -= quantity
+
+    total = selected_product["price"] * quantity
+
+    print("\nSale completed successfully!")
+    print("Product:", selected_product["name"])
+    print("Quantity sold:", quantity)
+    print("Total amount: Rs.", total)
+    print("Remaining stock:", selected_product["quantity"])
+
+
+# Execution flow:
+# 1. Ask for the product ID and quantity to add.
+# 2. Find the matching product.
+# 3. Increase the existing stock quantity.
+def restock_product():
+
+    if len(inventory) == 0:
+        print("No products available.")
+        return
+
+    product_id = input("Enter product ID: ").strip()
+    quantity = input("Enter quantity to add: ").strip()
+
+    if not product_id.isdigit() or not quantity.isdigit():
+        print("Please enter valid numbers.")
+        return
+
+    product_id = int(product_id)
+    quantity = int(quantity)
+
+    if quantity <= 0:
+        print("Restock quantity must be greater than zero.")
+        return
+
+    for product in inventory:
+        if product["id"] == product_id:
+
+            product["quantity"] += quantity
+
+            print("Stock updated successfully!")
+            print("Product:", product["name"])
+            print("New stock:", product["quantity"])
+            return
+
+    print("Product not found.")
+
+
+# Execution flow:
+# 1. Check each product's available stock.
+# 2. Display products with fewer than 5 units.
+# 3. Inform the user if all products have sufficient stock.
+def low_stock_report():
+
+    found = False
+
+    print("\n========== LOW STOCK REPORT ==========")
+
+    for product in inventory:
+
+        if product["quantity"] < 5:
+            print("Product:", product["name"])
+            print("Available stock:", product["quantity"])
+            print("-------------------------------------")
+            found = True
+
+    if not found:
+        print("No low-stock products found.")
+
+
+# Execution flow:
+# 1. Display the menu.
+# 2. Accept the user's selection.
+# 3. Call the selected function.
+# 4. Repeat until the user exits.
+def main():
+
+    while True:
+
+        print("\n========== INVENTORY SYSTEM ==========")
+        print("1. Add Product")
+        print("2. View Inventory")
+        print("3. Sell Product")
+        print("4. Restock Product")
+        print("5. Low Stock Report")
+        print("6. Exit")
+        print("======================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            add_product()
+
+        elif choice == "2":
+            view_inventory()
+
+        elif choice == "3":
+            sell_product()
+
+        elif choice == "4":
+            restock_product()
+
+        elif choice == "5":
+            low_stock_report()
+
+        elif choice == "6":
+            print("Thank you for using Inventory Management System!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 6.")
+
+
+# Start program execution
+main()
