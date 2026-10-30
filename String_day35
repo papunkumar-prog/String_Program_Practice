@@ -1,0 +1,206 @@
+
+# ==========================================
+# BUS TICKET BOOKING MANAGEMENT SYSTEM
+# ==========================================
+
+# True means available, False means booked
+seats = {
+    number: True for number in range(1, 11)
+}
+
+bookings = []
+next_booking_id = 1
+
+
+# Execution flow:
+# 1. Check all seats.
+# 2. Display available and booked seats.
+def view_seats():
+
+    print("\n========== BUS SEATS ==========")
+
+    for seat_number, available in seats.items():
+
+        if available:
+            status = "Available"
+        else:
+            status = "Booked"
+
+        print("Seat", seat_number, "-", status)
+
+
+# Execution flow:
+# 1. Ask for passenger name.
+# 2. Ask for seat number.
+# 3. Validate the details.
+# 4. Check whether the seat is available.
+# 5. Store the booking details.
+def book_ticket():
+
+    global next_booking_id
+
+    name = input("Enter passenger name: ").strip()
+
+    if name == "":
+        print("Passenger name cannot be empty.")
+        return
+
+    seat_number = input("Enter seat number (1-10): ").strip()
+
+    if not seat_number.isdigit():
+        print("Please enter a valid seat number.")
+        return
+
+    seat_number = int(seat_number)
+
+    if seat_number not in seats:
+        print("Invalid seat number.")
+        return
+
+    if not seats[seat_number]:
+        print("Sorry, this seat is already booked.")
+        return
+
+    booking = {
+        "id": next_booking_id,
+        "name": name.title(),
+        "seat": seat_number
+    }
+
+    bookings.append(booking)
+
+    # Mark the selected seat as booked
+    seats[seat_number] = False
+
+    print("\nTicket booked successfully!")
+    print("Booking ID:", next_booking_id)
+    print("Passenger:", name.title())
+    print("Seat number:", seat_number)
+
+    next_booking_id += 1
+
+
+# Execution flow:
+# 1. Check whether bookings exist.
+# 2. Display passenger and booking details.
+def view_bookings():
+
+    if len(bookings) == 0:
+        print("No bookings available.")
+        return
+
+    print("\n========== ALL BOOKINGS ==========")
+
+    for booking in bookings:
+
+        print("Booking ID:", booking["id"])
+        print("Passenger:", booking["name"])
+        print("Seat:", booking["seat"])
+        print("---------------------------------")
+
+
+# Execution flow:
+# 1. Ask for a booking ID.
+# 2. Validate the entered ID.
+# 3. Search for the booking.
+# 4. Display matching details.
+def search_booking():
+
+    booking_id = input("Enter booking ID: ").strip()
+
+    if not booking_id.isdigit():
+        print("Please enter a valid booking ID.")
+        return
+
+    booking_id = int(booking_id)
+
+    for booking in bookings:
+
+        if booking["id"] == booking_id:
+
+            print("\nBooking found!")
+            print("Booking ID:", booking["id"])
+            print("Passenger:", booking["name"])
+            print("Seat number:", booking["seat"])
+            return
+
+    print("Booking not found.")
+
+
+# Execution flow:
+# 1. Ask for the booking ID.
+# 2. Find the matching booking.
+# 3. Release the booked seat.
+# 4. Remove the booking record.
+def cancel_booking():
+
+    booking_id = input("Enter booking ID to cancel: ").strip()
+
+    if not booking_id.isdigit():
+        print("Please enter a valid booking ID.")
+        return
+
+    booking_id = int(booking_id)
+
+    for index, booking in enumerate(bookings):
+
+        if booking["id"] == booking_id:
+
+            # Make the seat available again
+            seats[booking["seat"]] = True
+
+            cancelled = bookings.pop(index)
+
+            print("Booking cancelled successfully!")
+            print("Passenger:", cancelled["name"])
+            print("Seat released:", cancelled["seat"])
+            return
+
+    print("Booking not found.")
+
+
+# Execution flow:
+# 1. Display the main menu.
+# 2. Accept the user's choice.
+# 3. Call the selected function.
+# 4. Continue until the user exits.
+def main():
+
+    while True:
+
+        print("\n========== BUS BOOKING SYSTEM ==========")
+        print("1. View Available Seats")
+        print("2. Book Ticket")
+        print("3. View All Bookings")
+        print("4. Search Booking")
+        print("5. Cancel Booking")
+        print("6. Exit")
+        print("========================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            view_seats()
+
+        elif choice == "2":
+            book_ticket()
+
+        elif choice == "3":
+            view_bookings()
+
+        elif choice == "4":
+            search_booking()
+
+        elif choice == "5":
+            cancel_booking()
+
+        elif choice == "6":
+            print("Thank you for using Bus Booking System!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 6.")
+
+
+# Start program execution
+main()
