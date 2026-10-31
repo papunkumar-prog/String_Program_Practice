@@ -1,0 +1,217 @@
+
+# ==========================================
+# EMPLOYEE SALARY MANAGEMENT SYSTEM
+# ==========================================
+
+employees = []
+
+
+# Execution flow:
+# 1. Accept a numeric value from the user.
+# 2. Check whether the value is valid.
+# 3. Return the value after validation.
+def get_number(message):
+
+    while True:
+        try:
+            value = float(input(message))
+
+            if value < 0:
+                print("Amount cannot be negative.")
+            else:
+                return value
+
+        except ValueError:
+            print("Please enter a valid number.")
+
+
+# Execution flow:
+# 1. Get employee details.
+# 2. Accept salary and allowance percentages.
+# 3. Calculate HRA, DA, gross salary and net salary.
+# 4. Store the employee details.
+def add_employee():
+
+    name = input("Enter employee name: ").strip()
+
+    if name == "":
+        print("Employee name cannot be empty.")
+        return
+
+    basic_salary = get_number("Enter basic salary: ")
+
+    if basic_salary == 0:
+        print("Basic salary must be greater than zero.")
+        return
+
+    hra_percent = get_number("Enter HRA percentage: ")
+
+    if hra_percent > 100:
+        print("HRA percentage cannot exceed 100.")
+        return
+
+    da_percent = get_number("Enter DA percentage: ")
+
+    if da_percent > 100:
+        print("DA percentage cannot exceed 100.")
+        return
+
+    deductions = get_number("Enter other deductions: ")
+
+    # Calculate salary components
+    hra = basic_salary * hra_percent / 100
+    da = basic_salary * da_percent / 100
+
+    gross_salary = basic_salary + hra + da
+
+    if deductions > gross_salary:
+        print("Deductions cannot exceed gross salary.")
+        return
+
+    net_salary = gross_salary - deductions
+
+    # Generate employee ID
+    employee_id = len(employees) + 1
+
+    employee = {
+        "id": employee_id,
+        "name": name.title(),
+        "basic_salary": basic_salary,
+        "hra": hra,
+        "da": da,
+        "gross_salary": gross_salary,
+        "deductions": deductions,
+        "net_salary": net_salary
+    }
+
+    employees.append(employee)
+
+    print("\nEmployee added successfully!")
+    print("Employee ID:", employee_id)
+    print("Net salary: Rs.", round(net_salary, 2))
+
+
+# Execution flow:
+# 1. Check whether employee records exist.
+# 2. Display employee details.
+# 3. Show the salary breakdown.
+def view_employees():
+
+    if len(employees) == 0:
+        print("No employee records found.")
+        return
+
+    print("\n========== EMPLOYEE SALARY RECORDS ==========")
+
+    for employee in employees:
+
+        print("\nEmployee ID:", employee["id"])
+        print("Name:", employee["name"])
+        print("Basic Salary: Rs.", round(employee["basic_salary"], 2))
+        print("HRA: Rs.", round(employee["hra"], 2))
+        print("DA: Rs.", round(employee["da"], 2))
+        print("Gross Salary: Rs.", round(employee["gross_salary"], 2))
+        print("Deductions: Rs.", round(employee["deductions"], 2))
+        print("Net Salary: Rs.", round(employee["net_salary"], 2))
+        print("---------------------------------------------")
+
+
+# Execution flow:
+# 1. Ask for an employee ID.
+# 2. Search the employee list.
+# 3. Display the matching salary details.
+def search_employee():
+
+    search_id = input("Enter employee ID: ").strip()
+
+    if not search_id.isdigit():
+        print("Please enter a valid employee ID.")
+        return
+
+    search_id = int(search_id)
+
+    for employee in employees:
+
+        if employee["id"] == search_id:
+
+            print("\nEmployee found!")
+            print("Name:", employee["name"])
+            print("Basic Salary: Rs.", employee["basic_salary"])
+            print("Gross Salary: Rs.", employee["gross_salary"])
+            print("Deductions: Rs.", employee["deductions"])
+            print("Net Salary: Rs.", employee["net_salary"])
+
+            return
+
+    print("Employee not found.")
+
+
+# Execution flow:
+# 1. Count the total employees.
+# 2. Calculate total gross salary.
+# 3. Calculate total deductions.
+# 4. Calculate the total net salary.
+def salary_summary():
+
+    if len(employees) == 0:
+        print("No salary records available.")
+        return
+
+    total_gross = 0
+    total_deductions = 0
+    total_net = 0
+
+    for employee in employees:
+
+        total_gross += employee["gross_salary"]
+        total_deductions += employee["deductions"]
+        total_net += employee["net_salary"]
+
+    print("\n========== SALARY SUMMARY ==========")
+
+    print("Total employees:", len(employees))
+
+    print("Total gross salary: Rs.",
+          round(total_gross, 2))
+
+    print("Total deductions: Rs.",
+          round(total_deductions, 2))
+
+    print("Total net salary: Rs.",
+          round(total_net, 2))
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+while True:
+
+    print("\n========== EMPLOYEE SALARY SYSTEM ==========")
+    print("1. Add Employee")
+    print("2. View All Employees")
+    print("3. Search Employee")
+    print("4. Salary Summary")
+    print("5. Exit")
+    print("============================================")
+
+    choice = input("Enter your choice: ").strip()
+
+    if choice == "1":
+        add_employee()
+
+    elif choice == "2":
+        view_employees()
+
+    elif choice == "3":
+        search_employee()
+
+    elif choice == "4":
+        salary_summary()
+
+    elif choice == "5":
+        print("Thank you for using Employee Salary System!")
+        break
+
+    else:
+        print("Invalid choice. Please select 1 to 5.")
