@@ -1,0 +1,230 @@
+
+# ==========================================
+# PERSONAL NOTES MANAGEMENT SYSTEM
+# ==========================================
+
+import json
+
+FILE_NAME = "notes.json"
+
+notes = []
+
+
+# Execution flow:
+# 1. Open the JSON file.
+# 2. Read previously saved notes.
+# 3. Return an empty list if the file does not exist.
+def load_notes():
+
+    try:
+        with open(FILE_NAME, "r", encoding="utf-8") as file:
+            data = json.load(file)
+
+        if isinstance(data, list):
+            return data
+
+        print("Invalid notes file format.")
+        return []
+
+    except FileNotFoundError:
+        return []
+
+    except json.JSONDecodeError:
+        print("Notes file contains invalid data.")
+        return []
+
+
+# Execution flow:
+# 1. Open the JSON file in write mode.
+# 2. Convert the notes list into JSON format.
+# 3. Save all notes.
+def save_notes():
+
+    try:
+        with open(FILE_NAME, "w", encoding="utf-8") as file:
+            json.dump(notes, file, indent=4)
+
+        return True
+
+    except OSError:
+        print("Unable to save notes.")
+        return False
+
+
+# Execution flow:
+# 1. Ask for a note title and description.
+# 2. Validate the entered information.
+# 3. Generate a unique note ID.
+# 4. Add the note to the list.
+# 5. Save the updated list.
+def add_note():
+
+    title = input("Enter note title: ").strip()
+    content = input("Enter note description: ").strip()
+
+    if title == "" or content == "":
+        print("Title and description cannot be empty.")
+        return
+
+    note_id = 1
+
+    for note in notes:
+        if note["id"] >= note_id:
+            note_id = note["id"] + 1
+
+    new_note = {
+        "id": note_id,
+        "title": title,
+        "content": content
+    }
+
+    notes.append(new_note)
+
+    if save_notes():
+        print("Note added successfully!")
+        print("Note ID:", note_id)
+
+
+# Execution flow:
+# 1. Check whether notes are available.
+# 2. Display each note.
+def view_notes():
+
+    if len(notes) == 0:
+        print("No notes available.")
+        return
+
+    print("\n========== ALL NOTES ==========")
+
+    for note in notes:
+
+        print("\nNote ID:", note["id"])
+        print("Title:", note["title"])
+        print("Description:", note["content"])
+        print("------------------------------")
+
+
+# Execution flow:
+# 1. Ask for a search keyword.
+# 2. Check note titles and descriptions.
+# 3. Display all matching notes.
+def search_note():
+
+    search = input("Enter keyword to search: ").strip().lower()
+
+    if search == "":
+        print("Search keyword cannot be empty.")
+        return
+
+    found = False
+
+    for note in notes:
+
+        title = note["title"].lower()
+        content = note["content"].lower()
+
+        if search in title or search in content:
+
+            print("\nNote found!")
+            print("ID:", note["id"])
+            print("Title:", note["title"])
+            print("Description:", note["content"])
+
+            found = True
+
+    if not found:
+        print("No matching notes found.")
+
+
+# Execution flow:
+# 1. Ask for the note ID.
+# 2. Validate the entered ID.
+# 3. Find the matching note.
+# 4. Remove the note and save changes.
+def delete_note():
+
+    if len(notes) == 0:
+        print("No notes available.")
+        return
+
+    view_notes()
+
+    choice = input("\nEnter note ID to delete: ").strip()
+
+    if not choice.isdigit():
+        print("Please enter a valid note ID.")
+        return
+
+    note_id = int(choice)
+
+    for index, note in enumerate(notes):
+
+        if note["id"] == note_id:
+
+            deleted_note = notes.pop(index)
+
+            if save_notes():
+                print(deleted_note["title"], "deleted successfully!")
+
+            return
+
+    print("Note not found.")
+
+
+# Execution flow:
+# 1. Count the saved notes.
+# 2. Display the total number.
+def notes_summary():
+
+    print("\n========== NOTES SUMMARY ==========")
+    print("Total notes:", len(notes))
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+# Load previously saved notes when program starts
+notes = load_notes()
+
+
+def main():
+
+    while True:
+
+        print("\n========== NOTES MANAGER ==========")
+        print("1. Add Note")
+        print("2. View All Notes")
+        print("3. Search Note")
+        print("4. Delete Note")
+        print("5. Notes Summary")
+        print("6. Exit")
+        print("===================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            add_note()
+
+        elif choice == "2":
+            view_notes()
+
+        elif choice == "3":
+            search_note()
+
+        elif choice == "4":
+            delete_note()
+
+        elif choice == "5":
+            notes_summary()
+
+        elif choice == "6":
+            print("Thank you for using Notes Manager!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 6.")
+
+
+# Start program execution
+main()
