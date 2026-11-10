@@ -1,0 +1,238 @@
+
+# ==========================================
+# IT APPLICATION LOG ANALYZER
+# ==========================================
+
+from datetime import datetime
+
+LOG_FILE = "application_logs.txt"
+
+LOG_LEVELS = ["INFO", "WARNING", "ERROR"]
+
+
+# Execution flow:
+# 1. Read the log file.
+# 2. Return all existing log entries.
+# 3. Return an empty list if the file does not exist.
+def load_logs():
+
+    try:
+        with open(LOG_FILE, "r", encoding="utf-8") as file:
+            return file.readlines()
+
+    except FileNotFoundError:
+        return []
+
+    except OSError as error:
+        print("Unable to read log file:", error)
+        return []
+
+
+# Execution flow:
+# 1. Ask the user for a log level.
+# 2. Accept the issue description.
+# 3. Generate the current date and time.
+# 4. Save the log entry in the text file.
+def add_log():
+
+    print("\nSelect log level:")
+    print("1. INFO")
+    print("2. WARNING")
+    print("3. ERROR")
+
+    choice = input("Enter your choice: ").strip()
+
+    if choice == "1":
+        level = "INFO"
+    elif choice == "2":
+        level = "WARNING"
+    elif choice == "3":
+        level = "ERROR"
+    else:
+        print("Invalid log level.")
+        return
+
+    message = input("Enter log description: ").strip()
+
+    if message == "":
+        print("Log description cannot be empty.")
+        return
+
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    log_entry = f"{current_time} | {level} | {message}\n"
+
+    try:
+        with open(LOG_FILE, "a", encoding="utf-8") as file:
+            file.write(log_entry)
+
+        print("Log saved successfully!")
+
+    except OSError as error:
+        print("Unable to save log:", error)
+
+
+# Execution flow:
+# 1. Load all existing logs.
+# 2. Check whether logs are available.
+# 3. Display each log entry.
+def view_logs():
+
+    logs = load_logs()
+
+    if len(logs) == 0:
+        print("No logs available.")
+        return
+
+    print("\n========== APPLICATION LOGS ==========")
+
+    for log in logs:
+        print(log.strip())
+
+
+# Execution flow:
+# 1. Accept a search keyword.
+# 2. Read all log entries.
+# 3. Compare the keyword with each log.
+# 4. Display matching entries.
+def search_logs():
+
+    keyword = input("Enter keyword to search: ").strip().lower()
+
+    if keyword == "":
+        print("Search keyword cannot be empty.")
+        return
+
+    logs = load_logs()
+    found = False
+
+    print("\n========== SEARCH RESULTS ==========")
+
+    for log in logs:
+
+        if keyword in log.lower():
+            print(log.strip())
+            found = True
+
+    if not found:
+        print("No matching logs found.")
+
+
+# Execution flow:
+# 1. Ask for a log level.
+# 2. Read all log entries.
+# 3. Display only logs matching that level.
+def filter_logs():
+
+    print("\n1. INFO")
+    print("2. WARNING")
+    print("3. ERROR")
+
+    choice = input("Select log level: ").strip()
+
+    if choice not in ("1", "2", "3"):
+        print("Invalid choice.")
+        return
+
+    level = LOG_LEVELS[int(choice) - 1]
+
+    logs = load_logs()
+    found = False
+
+    print("\n==========", level, "LOGS ==========")
+
+    for log in logs:
+
+        details = log.strip().split(" | ", 2)
+
+        if len(details) == 3 and details[1] == level:
+            print(log.strip())
+            found = True
+
+    if not found:
+        print("No", level, "logs found.")
+
+
+# Execution flow:
+# 1. Load all log entries.
+# 2. Create counters for each log level.
+# 3. Count INFO, WARNING and ERROR entries.
+# 4. Display the final summary.
+def log_summary():
+
+    logs = load_logs()
+
+    counts = {
+        "INFO": 0,
+        "WARNING": 0,
+        "ERROR": 0
+    }
+
+    for log in logs:
+
+        details = log.strip().split(" | ", 2)
+
+        if len(details) == 3:
+
+            level = details[1]
+
+            if level in counts:
+                counts[level] += 1
+
+    print("\n========== LOG SUMMARY ==========")
+
+    print("Total logs:", len(logs))
+    print("INFO logs:", counts["INFO"])
+    print("WARNING logs:", counts["WARNING"])
+    print("ERROR logs:", counts["ERROR"])
+
+    if counts["ERROR"] > 0:
+        print("\nAttention: Application errors found!")
+    else:
+        print("\nNo application errors found.")
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+def main():
+
+    while True:
+
+        print("\n========== IT LOG ANALYZER ==========")
+        print("1. Add Log")
+        print("2. View All Logs")
+        print("3. Search Logs")
+        print("4. Filter Logs")
+        print("5. Log Summary")
+        print("6. Exit")
+        print("=====================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            add_log()
+
+        elif choice == "2":
+            view_logs()
+
+        elif choice == "3":
+            search_logs()
+
+        elif choice == "4":
+            filter_logs()
+
+        elif choice == "5":
+            log_summary()
+
+        elif choice == "6":
+            print("Thank you for using IT Log Analyzer!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 6.")
+
+
+# Start program execution
+main()
