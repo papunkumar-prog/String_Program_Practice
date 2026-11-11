@@ -1,0 +1,253 @@
+
+# ==========================================
+# PYTHON FILE ORGANIZER
+# ==========================================
+
+from pathlib import Path
+import shutil
+
+
+# File extensions and their categories
+FILE_TYPES = {
+    "Images": [".jpg", ".jpeg", ".png", ".gif", ".webp"],
+    "Documents": [".pdf", ".doc", ".docx", ".txt", ".xlsx", ".csv"],
+    "Videos": [".mp4", ".mkv", ".avi", ".mov"],
+    "Audio": [".mp3", ".wav", ".aac"],
+    "Archives": [".zip", ".rar", ".7z"],
+    "Code": [".py", ".java", ".html", ".css", ".js", ".sql"]
+}
+
+
+# Execution flow:
+# 1. Ask the user for a folder path.
+# 2. Check whether the folder exists.
+# 3. Return the folder path if valid.
+def select_folder():
+
+    folder = input("Enter folder path: ").strip().strip('"')
+
+    if folder == "":
+        print("Folder path cannot be empty.")
+        return None
+
+    path = Path(folder).expanduser()
+
+    if not path.exists():
+        print("Folder does not exist.")
+        return None
+
+    if not path.is_dir():
+        print("The selected path is not a folder.")
+        return None
+
+    print("Folder selected successfully!")
+
+    return path
+
+
+# Execution flow:
+# 1. Read the file extension.
+# 2. Compare it with available categories.
+# 3. Return the matching category.
+def get_category(file):
+
+    extension = file.suffix.lower()
+
+    for category, extensions in FILE_TYPES.items():
+
+        if extension in extensions:
+            return category
+
+    return "Others"
+
+
+# Execution flow:
+# 1. Check whether the destination filename already exists.
+# 2. Generate another filename if necessary.
+# 3. Return a destination that will not overwrite a file.
+def get_unique_path(destination_folder, file):
+
+    destination = destination_folder / file.name
+
+    count = 1
+
+    while destination.exists():
+
+        new_name = (
+            file.stem
+            + "_"
+            + str(count)
+            + file.suffix
+        )
+
+        destination = destination_folder / new_name
+
+        count += 1
+
+    return destination
+
+
+# Execution flow:
+# 1. Read files from the selected folder.
+# 2. Identify each file category.
+# 3. Display where each file will be moved.
+# 4. Do not move anything during preview.
+def preview_files(folder):
+
+    script_path = Path(__file__).resolve()
+
+    files = [
+        file for file in folder.iterdir()
+        if file.is_file() and file.resolve() != script_path
+    ]
+
+    if len(files) == 0:
+        print("No files available to organize.")
+        return
+
+    print("\n========== FILE ORGANIZATION PREVIEW ==========")
+
+    for file in files:
+
+        category = get_category(file)
+
+        print(
+            file.name,
+            "---------->",
+            category
+        )
+
+    print("-----------------------------------------------")
+    print("Total files:", len(files))
+
+
+# Execution flow:
+# 1. Read all files from the selected folder.
+# 2. Identify the category of each file.
+# 3. Create the category folder.
+# 4. Move the file into the correct folder.
+# 5. Display the final summary.
+def organize_files(folder):
+
+    script_path = Path(__file__).resolve()
+
+    files = [
+        file for file in folder.iterdir()
+        if file.is_file() and file.resolve() != script_path
+    ]
+
+    if len(files) == 0:
+        print("No files available to organize.")
+        return
+
+    summary = {}
+
+    moved = 0
+    failed = 0
+
+    for file in files:
+
+        category = get_category(file)
+
+        destination_folder = folder / category
+
+        try:
+
+            # Create category folder if it does not exist
+            destination_folder.mkdir(exist_ok=True)
+
+            # Find a safe destination filename
+            destination = get_unique_path(
+                destination_folder,
+                file
+            )
+
+            # Move the file
+            shutil.move(str(file), str(destination))
+
+            summary[category] = summary.get(category, 0) + 1
+
+            moved += 1
+
+            print("Moved:", file.name, "to", category)
+
+        except OSError as error:
+
+            print("Failed to move:", file.name)
+            print("Reason:", error)
+
+            failed += 1
+
+    # Display organization summary
+    print("\n========== ORGANIZATION SUMMARY ==========")
+
+    print("Successfully moved:", moved)
+    print("Failed:", failed)
+
+    for category, count in summary.items():
+
+        print(category, ":", count, "files")
+
+    print("===========================================")
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+def main():
+
+    folder_path = None
+
+    while True:
+
+        print("\n========== FILE ORGANIZER ==========")
+        print("1. Select Folder")
+        print("2. Preview Files")
+        print("3. Organize Files")
+        print("4. Exit")
+        print("====================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+
+            folder_path = select_folder()
+
+        elif choice == "2":
+
+            if folder_path is None:
+                print("Please select a folder first.")
+            else:
+                preview_files(folder_path)
+
+        elif choice == "3":
+
+            if folder_path is None:
+                print("Please select a folder first.")
+
+            else:
+
+                preview_files(folder_path)
+
+                confirm = input(
+                    "\nDo you want to organize these files? (yes/no): "
+                ).strip().lower()
+
+                if confirm == "yes":
+                    organize_files(folder_path)
+
+                else:
+                    print("File organization cancelled.")
+
+        elif choice == "4":
+
+            print("Thank you for using File Organizer!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 4.")
+
+
+# Start program execution
+main()
