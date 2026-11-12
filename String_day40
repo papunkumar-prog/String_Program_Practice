@@ -1,0 +1,304 @@
+
+# ==========================================
+# SALES MANAGEMENT SYSTEM
+# ==========================================
+
+import csv
+from pathlib import Path
+from datetime import datetime
+
+FILE_NAME = "sales.csv"
+
+
+# Execution flow:
+# 1. Check whether the CSV file exists.
+# 2. Read all previously saved sales.
+# 3. Return the sales records as a list.
+def load_sales():
+
+    try:
+        with open(FILE_NAME, "r", newline="", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            return list(reader)
+
+    except FileNotFoundError:
+        return []
+
+    except OSError as error:
+        print("Unable to read sales file:", error)
+        return []
+
+
+# Execution flow:
+# 1. Accept product name, quantity and price.
+# 2. Validate the entered information.
+# 3. Calculate the total sale amount.
+# 4. Generate a unique sale ID.
+# 5. Save the record in the CSV file.
+def add_sale():
+
+    product = input("Enter product name: ").strip()
+
+    if product == "":
+        print("Product name cannot be empty.")
+        return
+
+    quantity = input("Enter quantity sold: ").strip()
+
+    if not quantity.isdigit():
+        print("Please enter a valid quantity.")
+        return
+
+    quantity = int(quantity)
+
+    if quantity <= 0:
+        print("Quantity must be greater than zero.")
+        return
+
+    try:
+        price = float(input("Enter price per item: "))
+
+        if price <= 0:
+            print("Price must be greater than zero.")
+            return
+
+    except ValueError:
+        print("Please enter a valid price.")
+        return
+
+    # Calculate total sale amount
+    total = quantity * price
+
+    # Load existing sales to generate the next ID
+    sales = load_sales()
+
+    sale_id = max(
+        (int(sale["id"]) for sale in sales),
+        default=0
+    ) + 1
+
+    # Generate current date
+    sale_date = datetime.now().strftime("%d-%m-%Y")
+
+    new_sale = {
+        "id": sale_id,
+        "date": sale_date,
+        "product": product.title(),
+        "quantity": quantity,
+        "price": round(price, 2),
+        "total": round(total, 2)
+    }
+
+    # Check whether the CSV file needs a header
+    file_path = Path(FILE_NAME)
+    write_header = (
+        not file_path.exists()
+        or file_path.stat().st_size == 0
+    )
+
+    fieldnames = [
+        "id", "date", "product",
+        "quantity", "price", "total"
+    ]
+
+    try:
+        with open(FILE_NAME, "a", newline="", encoding="utf-8") as file:
+
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+            if write_header:
+                writer.writeheader()
+
+            writer.writerow(new_sale)
+
+        print("\nSale recorded successfully!")
+        print("Sale ID:", sale_id)
+        print("Product:", product.title())
+        print("Total amount: Rs.", round(total, 2))
+
+    except OSError as error:
+        print("Unable to save sale:", error)
+
+
+# Execution flow:
+# 1. Load all sales records.
+# 2. Check whether sales are available.
+# 3. Display all recorded transactions.
+def view_sales():
+
+    sales = load_sales()
+
+    if len(sales) == 0:
+        print("No sales records available.")
+        return
+
+    print("\n========== ALL SALES RECORDS ==========")
+
+    for sale in sales:
+
+        print("\nSale ID:", sale["id"])
+        print("Date:", sale["date"])
+        print("Product:", sale["product"])
+        print("Quantity:", sale["quantity"])
+        print("Price: Rs.", sale["price"])
+        print("Total: Rs.", sale["total"])
+        print("---------------------------------------")
+
+
+# Execution flow:
+# 1. Ask for a product name.
+# 2. Load all sales records.
+# 3. Compare the search text with product names.
+# 4. Display matching records.
+def search_sales():
+
+    search = input("Enter product name to search: ").strip().lower()
+
+    if search == "":
+        print("Search value cannot be empty.")
+        return
+
+    sales = load_sales()
+    found = False
+
+    for sale in sales:
+
+        if search in sale["product"].lower():
+
+            print("\nSale found!")
+            print("Sale ID:", sale["id"])
+            print("Product:", sale["product"])
+            print("Quantity:", sale["quantity"])
+            print("Total: Rs.", sale["total"])
+
+            found = True
+
+    if not found:
+        print("No matching sales found.")
+
+
+# Execution flow:
+# 1. Load all sales records.
+# 2. Calculate total revenue.
+# 3. Count total products sold.
+# 4. Display the sales summary.
+def total_revenue():
+
+    sales = load_sales()
+
+    if len(sales) == 0:
+        print("No sales records available.")
+        return
+
+    revenue = 0
+    total_quantity = 0
+
+    for sale in sales:
+
+        revenue += float(sale["total"])
+        total_quantity += int(sale["quantity"])
+
+    print("\n========== REVENUE SUMMARY ==========")
+    print("Total transactions:", len(sales))
+    print("Total products sold:", total_quantity)
+    print("Total revenue: Rs.", round(revenue, 2))
+
+
+# Execution flow:
+# 1. Load all sales records.
+# 2. Group records by product name.
+# 3. Calculate product-wise quantity and revenue.
+# 4. Display the best-selling product.
+def product_report():
+
+    sales = load_sales()
+
+    if len(sales) == 0:
+        print("No sales records available.")
+        return
+
+    product_summary = {}
+
+    for sale in sales:
+
+        product = sale["product"]
+
+        quantity = int(sale["quantity"])
+        amount = float(sale["total"])
+
+        if product not in product_summary:
+
+            product_summary[product] = {
+                "quantity": 0,
+                "revenue": 0
+            }
+
+        product_summary[product]["quantity"] += quantity
+        product_summary[product]["revenue"] += amount
+
+    print("\n========== PRODUCT-WISE REPORT ==========")
+
+    for product, details in product_summary.items():
+
+        print("\nProduct:", product)
+        print("Quantity sold:", details["quantity"])
+        print("Revenue: Rs.", round(details["revenue"], 2))
+
+    # Find the product with the highest quantity sold
+    best_product = max(
+        product_summary,
+        key=lambda item: product_summary[item]["quantity"]
+    )
+
+    print("\n========== BEST SELLING PRODUCT ==========")
+    print("Product:", best_product)
+    print(
+        "Units sold:",
+        product_summary[best_product]["quantity"]
+    )
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+def main():
+
+    while True:
+
+        print("\n========== SALES MANAGEMENT SYSTEM ==========")
+        print("1. Add Sale")
+        print("2. View All Sales")
+        print("3. Search Sales")
+        print("4. Total Revenue")
+        print("5. Product-Wise Report")
+        print("6. Exit")
+        print("=============================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            add_sale()
+
+        elif choice == "2":
+            view_sales()
+
+        elif choice == "3":
+            search_sales()
+
+        elif choice == "4":
+            total_revenue()
+
+        elif choice == "5":
+            product_report()
+
+        elif choice == "6":
+            print("Thank you for using Sales Management System!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 6.")
+
+
+# Start program execution
+main()
