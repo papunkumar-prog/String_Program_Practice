@@ -1,0 +1,222 @@
+
+# ==========================================
+# DUPLICATE FILE FINDER
+# ==========================================
+
+from pathlib import Path
+import hashlib
+
+
+# Execution flow:
+# 1. Accept a folder path.
+# 2. Check whether the folder exists.
+# 3. Return the folder path if valid.
+def select_folder():
+
+    folder = input("Enter folder path: ").strip().strip('"')
+
+    if folder == "":
+        print("Folder path cannot be empty.")
+        return None
+
+    folder_path = Path(folder).expanduser()
+
+    if not folder_path.exists():
+        print("Folder does not exist.")
+        return None
+
+    if not folder_path.is_dir():
+        print("Please select a valid folder.")
+        return None
+
+    print("Folder selected successfully!")
+
+    return folder_path
+
+
+# Execution flow:
+# 1. Open the file in binary mode.
+# 2. Read the file in small chunks.
+# 3. Generate a SHA256 hash.
+# 4. Return the hash value.
+def get_file_hash(file_path):
+
+    sha256 = hashlib.sha256()
+
+    try:
+
+        with open(file_path, "rb") as file:
+
+            while True:
+
+                chunk = file.read(1024 * 1024)
+
+                if not chunk:
+                    break
+
+                sha256.update(chunk)
+
+        return sha256.hexdigest()
+
+    except OSError as error:
+
+        print("Unable to read:", file_path)
+        print("Reason:", error)
+
+        return None
+
+
+# Execution flow:
+# 1. Scan all files inside the selected folder.
+# 2. Group files having the same size.
+# 3. Calculate hashes for possible duplicates.
+# 4. Group files with identical hashes.
+# 5. Return all duplicate groups.
+def find_duplicates(folder):
+
+    files_by_size = {}
+
+    files_checked = 0
+    skipped_files = 0
+
+    print("\nScanning folder...")
+    
+    # First group files by their size
+    for file_path in folder.rglob("*"):
+
+        try:
+
+            if file_path.is_file():
+
+                file_size = file_path.stat().st_size
+
+                if file_size not in files_by_size:
+                    files_by_size[file_size] = []
+
+                files_by_size[file_size].append(file_path)
+
+                files_checked += 1
+
+        except OSError:
+            skipped_files += 1
+
+    duplicate_groups = []
+
+    # Compare hashes only for files with matching sizes
+    for file_size, file_list in files_by_size.items():
+
+        if len(file_list) < 2:
+            continue
+
+        hash_groups = {}
+
+        for file_path in file_list:
+
+            file_hash = get_file_hash(file_path)
+
+            if file_hash is None:
+                skipped_files += 1
+                continue
+
+            if file_hash not in hash_groups:
+                hash_groups[file_hash] = []
+
+            hash_groups[file_hash].append(file_path)
+
+        # Keep groups containing more than one file
+        for group in hash_groups.values():
+
+            if len(group) > 1:
+                duplicate_groups.append(group)
+
+    return duplicate_groups, files_checked, skipped_files
+
+
+# Execution flow:
+# 1. Check whether duplicates were found.
+# 2. Display each duplicate group.
+# 3. Display duplicate file locations.
+def display_duplicates(duplicate_groups):
+
+    if len(duplicate_groups) == 0:
+        print("\nNo duplicate files found.")
+        return
+
+    total_duplicates = 0
+
+    print("\n========== DUPLICATE FILES ==========")
+
+    for number, group in enumerate(duplicate_groups, start=1):
+
+        print("\nDuplicate Group:", number)
+
+        for file_path in group:
+
+            print("File:", file_path.name)
+            print("Location:", file_path)
+
+            total_duplicates += 1
+
+        print("------------------------------------")
+
+    print("\nTotal duplicate groups:", len(duplicate_groups))
+    print("Total duplicate files:", total_duplicates)
+
+    extra_copies = sum(len(group) - 1 for group in duplicate_groups)
+
+    print("Extra duplicate copies:", extra_copies)
+
+
+# Execution flow:
+# 1. Ask the user to select a folder.
+# 2. Scan the folder for duplicates.
+# 3. Display the results.
+# 4. Display the number of files checked.
+def scan_folder():
+
+    folder = select_folder()
+
+    if folder is None:
+        return
+
+    duplicate_groups, checked, skipped = find_duplicates(folder)
+
+    print("\n========== SCAN SUMMARY ==========")
+
+    print("Files checked:", checked)
+    print("Files skipped:", skipped)
+
+    display_duplicates(duplicate_groups)
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+def main():
+
+    while True:
+
+        print("\n========== DUPLICATE FILE FINDER ==========")
+        print("1. Scan Folder")
+        print("2. Exit")
+        print("===========================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+
+            scan_folder()
+
+        elif choice == "2":
+
+            print("Thank you for using Duplicate File Finder!")
+            break
+
+        else:
+
+            print("Invalid choice. Please select 1 or 2.")
+
+
+# Start program execution
+main()
