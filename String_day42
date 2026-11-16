@@ -1,0 +1,259 @@
+
+# ==========================================
+# DISK SPACE ANALYZER
+# ==========================================
+
+import os
+from pathlib import Path
+
+
+# Execution flow:
+# 1. Ask the user for a folder path.
+# 2. Check whether the folder exists.
+# 3. Verify that the selected path is a directory.
+# 4. Return the valid folder path.
+def select_folder():
+
+    folder = input("Enter folder path: ").strip().strip('"')
+
+    if folder == "":
+        print("Folder path cannot be empty.")
+        return None
+
+    folder_path = Path(folder).expanduser()
+
+    if not folder_path.exists():
+        print("Folder does not exist.")
+        return None
+
+    if not folder_path.is_dir():
+        print("The selected path is not a folder.")
+        return None
+
+    print("Folder selected successfully!")
+
+    return folder_path
+
+
+# Execution flow:
+# 1. Receive file size in bytes.
+# 2. Convert bytes into KB, MB, or GB.
+# 3. Return a readable storage value.
+def format_size(size):
+
+    units = ["Bytes", "KB", "MB", "GB", "TB"]
+
+    size = float(size)
+
+    for unit in units:
+
+        if size < 1024 or unit == "TB":
+            return f"{size:.2f} {unit}"
+
+        size = size / 1024
+
+
+# Execution flow:
+# 1. Scan all files inside the selected folder.
+# 2. Calculate the size of each file.
+# 3. Group files according to their extensions.
+# 4. Find the largest files.
+# 5. Return the complete analysis.
+def analyze_folder(folder):
+
+    total_size = 0
+    total_files = 0
+
+    extension_summary = {}
+    file_records = []
+    scan_errors = []
+
+    print("\nScanning folder...")
+
+    # Handle folders that cannot be accessed
+    def handle_error(error):
+        scan_errors.append(str(error))
+
+    # Walk through the selected folder and subfolders
+    for root, directories, files in os.walk(
+        folder,
+        onerror=handle_error,
+        followlinks=False
+    ):
+
+        # Avoid following symbolic-link directories
+        directories[:] = [
+            name for name in directories
+            if not (Path(root) / name).is_symlink()
+        ]
+
+        for filename in files:
+
+            file_path = Path(root) / filename
+
+            try:
+
+                if file_path.is_symlink():
+                    continue
+
+                file_size = file_path.stat().st_size
+
+            except OSError:
+                scan_errors.append(str(file_path))
+                continue
+
+            total_files += 1
+            total_size += file_size
+
+            # Identify the file extension
+            extension = file_path.suffix.lower()
+
+            if extension == "":
+                extension = "[No Extension]"
+
+            # Group files by extension
+            if extension not in extension_summary:
+
+                extension_summary[extension] = {
+                    "count": 0,
+                    "size": 0
+                }
+
+            extension_summary[extension]["count"] += 1
+            extension_summary[extension]["size"] += file_size
+
+            # Store file details for largest-file analysis
+            file_records.append({
+                "name": filename,
+                "path": file_path,
+                "size": file_size
+            })
+
+    return (
+        total_files,
+        total_size,
+        extension_summary,
+        file_records,
+        scan_errors
+    )
+
+
+# Execution flow:
+# 1. Receive the analysis results.
+# 2. Display the total number of files.
+# 3. Display total storage consumption.
+# 4. Show storage usage by extension.
+def display_summary(total_files, total_size, extension_summary):
+
+    print("\n========== STORAGE SUMMARY ==========")
+
+    print("Total files:", total_files)
+    print("Total storage:", format_size(total_size))
+
+    print("\n========== FILE TYPE SUMMARY ==========")
+
+    sorted_extensions = sorted(
+        extension_summary.items(),
+        key=lambda item: item[1]["size"],
+        reverse=True
+    )
+
+    for extension, details in sorted_extensions:
+
+        print("\nExtension:", extension)
+        print("File count:", details["count"])
+        print("Total size:", format_size(details["size"]))
+
+
+# Execution flow:
+# 1. Sort files by their size.
+# 2. Select the five largest files.
+# 3. Display their names, paths, and sizes.
+def display_largest_files(file_records):
+
+    print("\n========== FIVE LARGEST FILES ==========")
+
+    largest_files = sorted(
+        file_records,
+        key=lambda item: item["size"],
+        reverse=True
+    )[:5]
+
+    if len(largest_files) == 0:
+        print("No files found.")
+        return
+
+    for number, file in enumerate(largest_files, start=1):
+
+        print("\nRank:", number)
+        print("File:", file["name"])
+        print("Location:", file["path"])
+        print("Size:", format_size(file["size"]))
+
+
+# Execution flow:
+# 1. Ask the user to select a folder.
+# 2. Analyze its storage usage.
+# 3. Display the storage summary.
+# 4. Display the five largest files.
+def start_analysis():
+
+    folder = select_folder()
+
+    if folder is None:
+        return
+
+    (
+        total_files,
+        total_size,
+        extension_summary,
+        file_records,
+        scan_errors
+    ) = analyze_folder(folder)
+
+    display_summary(
+        total_files,
+        total_size,
+        extension_summary
+    )
+
+    display_largest_files(file_records)
+
+    print("\n========== SCAN RESULT ==========")
+    print("Files scanned:", total_files)
+    print("Access errors:", len(scan_errors))
+
+    print("\nAnalysis completed successfully!")
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+def main():
+
+    while True:
+
+        print("\n========== DISK SPACE ANALYZER ==========")
+        print("1. Analyze Folder")
+        print("2. Exit")
+        print("=========================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+
+            start_analysis()
+
+        elif choice == "2":
+
+            print("Thank you for using Disk Space Analyzer!")
+            break
+
+        else:
+
+            print("Invalid choice. Please select 1 or 2.")
+
+
+# Start program execution
+main()
