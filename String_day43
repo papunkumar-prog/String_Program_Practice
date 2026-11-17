@@ -1,0 +1,248 @@
+
+# ==========================================
+# GROUP EXPENSE SPLITTER
+# ==========================================
+
+members = []
+expenses = []
+
+
+# Execution flow:
+# 1. Ask for the member's name.
+# 2. Check whether the name already exists.
+# 3. Add the member to the group.
+def add_member():
+
+    name = input("Enter member name: ").strip()
+
+    if name == "":
+        print("Name cannot be empty.")
+        return
+
+    for member in members:
+
+        if member.lower() == name.lower():
+            print("Member already exists.")
+            return
+
+    members.append(name.title())
+
+    print(name.title(), "added successfully!")
+
+
+# Execution flow:
+# 1. Check whether members exist.
+# 2. Display all group members with their numbers.
+def view_members():
+
+    if len(members) == 0:
+        print("No group members available.")
+        return
+
+    print("\n========== GROUP MEMBERS ==========")
+
+    for number, member in enumerate(members, start=1):
+        print(number, "-", member)
+
+
+# Execution flow:
+# 1. Ask for expense description and amount.
+# 2. Ask who paid the amount.
+# 3. Split the expense equally among all members.
+# 4. Store the expense details.
+def add_expense():
+
+    if len(members) < 2:
+        print("Add at least two members first.")
+        return
+
+    description = input("Enter expense description: ").strip()
+
+    if description == "":
+        print("Description cannot be empty.")
+        return
+
+    amount = input("Enter total amount: ").strip()
+
+    try:
+        amount_paise = round(float(amount) * 100)
+
+        if amount_paise <= 0:
+            print("Amount must be greater than zero.")
+            return
+
+    except ValueError:
+        print("Please enter a valid amount.")
+        return
+
+    view_members()
+
+    choice = input("Who paid? Enter member number: ").strip()
+
+    if not choice.isdigit():
+        print("Please enter a valid member number.")
+        return
+
+    payer_number = int(choice)
+
+    if payer_number < 1 or payer_number > len(members):
+        print("Invalid member number.")
+        return
+
+    payer = members[payer_number - 1]
+
+    expense = {
+        "id": len(expenses) + 1,
+        "description": description,
+        "amount": amount_paise,
+        "payer": payer,
+        "participants": members.copy()
+    }
+
+    expenses.append(expense)
+
+    print("\nExpense added successfully!")
+    print("Description:", description)
+    print("Paid by:", payer)
+    print("Total amount: Rs.", amount_paise / 100)
+
+
+# Execution flow:
+# 1. Check whether expenses exist.
+# 2. Display each expense.
+# 3. Show who paid and the total amount.
+def view_expenses():
+
+    if len(expenses) == 0:
+        print("No expenses available.")
+        return
+
+    print("\n========== EXPENSE HISTORY ==========")
+
+    for expense in expenses:
+
+        print("\nExpense ID:", expense["id"])
+        print("Description:", expense["description"])
+        print("Paid by:", expense["payer"])
+        print("Amount: Rs.", expense["amount"] / 100)
+        print("Shared members:", ", ".join(expense["participants"]))
+        print("-------------------------------------")
+
+
+# Execution flow:
+# 1. Create a balance for every member.
+# 2. Add the amount paid by each person.
+# 3. Calculate everyone's equal share.
+# 4. Subtract each person's share from their balance.
+# 5. Return the final balances in paise.
+def calculate_balances():
+
+    balances = {}
+
+    for member in members:
+        balances[member] = 0
+
+    for expense in expenses:
+
+        amount = expense["amount"]
+        payer = expense["payer"]
+        participants = expense["participants"]
+
+        # Add the amount paid by the payer
+        balances[payer] += amount
+
+        # Divide the amount equally in paise
+        base_share, remainder = divmod(
+            amount,
+            len(participants)
+        )
+
+        # Subtract each member's share
+        # Extra paise are distributed one at a time
+        for index, member in enumerate(participants):
+
+            share = base_share
+
+            if index < remainder:
+                share += 1
+
+            balances[member] -= share
+
+    return balances
+
+
+# Execution flow:
+# 1. Calculate all member balances.
+# 2. Display who should receive money.
+# 3. Display who owes money.
+# 4. Identify members whose balances are settled.
+def view_balances():
+
+    if len(expenses) == 0:
+        print("No expenses recorded yet.")
+        return
+
+    balances = calculate_balances()
+
+    print("\n========== GROUP BALANCE SUMMARY ==========")
+
+    for member, balance in balances.items():
+
+        amount = abs(balance) / 100
+
+        if balance > 0:
+            print(member, "should receive Rs.", round(amount, 2))
+
+        elif balance < 0:
+            print(member, "owes Rs.", round(amount, 2))
+
+        else:
+            print(member, "is settled.")
+
+    print("============================================")
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+def main():
+
+    while True:
+
+        print("\n========== GROUP EXPENSE SPLITTER ==========")
+        print("1. Add Member")
+        print("2. View Members")
+        print("3. Add Expense")
+        print("4. View Expenses")
+        print("5. View Group Balances")
+        print("6. Exit")
+        print("============================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            add_member()
+
+        elif choice == "2":
+            view_members()
+
+        elif choice == "3":
+            add_expense()
+
+        elif choice == "4":
+            view_expenses()
+
+        elif choice == "5":
+            view_balances()
+
+        elif choice == "6":
+            print("Thank you for using Group Expense Splitter!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 6.")
+
+
+# Start program execution
+main()
