@@ -1,0 +1,294 @@
+
+# ==========================================
+# WEBSITE AVAILABILITY MONITOR
+# ==========================================
+
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlsplit
+from datetime import datetime
+import time
+
+websites = []
+history = []
+
+
+# Execution flow:
+# 1. Check whether the entered URL is valid.
+# 2. Verify that it uses HTTP or HTTPS.
+# 3. Return the cleaned URL.
+def validate_url(url):
+
+    url = url.strip()
+
+    try:
+        details = urlsplit(url)
+
+        if details.scheme not in ("http", "https"):
+            return None
+
+        if not details.hostname:
+            return None
+
+        return url
+
+    except ValueError:
+        return None
+
+
+# Execution flow:
+# 1. Accept a website URL.
+# 2. Validate the URL.
+# 3. Check for duplicate URLs.
+# 4. Add the URL to the website list.
+def add_website():
+
+    url = input("Enter website URL: ").strip()
+
+    url = validate_url(url)
+
+    if url is None:
+        print("Please enter a valid HTTP or HTTPS URL.")
+        return
+
+    for website in websites:
+
+        if website.lower() == url.lower():
+            print("Website already exists.")
+            return
+
+    websites.append(url)
+
+    print("Website added successfully!")
+
+
+# Execution flow:
+# 1. Check whether websites are registered.
+# 2. Display all website URLs with their numbers.
+def view_websites():
+
+    if len(websites) == 0:
+        print("No websites registered.")
+        return
+
+    print("\n========== REGISTERED WEBSITES ==========")
+
+    for number, website in enumerate(websites, start=1):
+        print(number, "-", website)
+
+
+# Execution flow:
+# 1. Send an HTTP request to the website.
+# 2. Measure the response time.
+# 3. Read the HTTP status code.
+# 4. Handle connection errors and timeouts.
+# 5. Save the result in checking history.
+def check_website(url):
+
+    start_time = time.perf_counter()
+
+    status_code = None
+
+    try:
+
+        request = Request(
+            url,
+            headers={"User-Agent": "Python Website Monitor"}
+        )
+
+        with urlopen(request, timeout=5) as response:
+
+            status_code = response.getcode()
+
+        if 200 <= status_code < 400:
+            result = "Available"
+        else:
+            result = "HTTP response received"
+
+    except HTTPError as error:
+
+        status_code = error.code
+
+        if status_code >= 500:
+            result = "Server error"
+        else:
+            result = "HTTP error response"
+
+    except (URLError, TimeoutError, OSError) as error:
+
+        result = "Connection failed: " + str(error.reason if isinstance(error, URLError) else error)
+
+    except ValueError as error:
+
+        result = "Invalid URL: " + str(error)
+
+    response_time = time.perf_counter() - start_time
+
+    check_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+    record = {
+        "url": url,
+        "status": status_code,
+        "result": result,
+        "response_time": round(response_time, 3),
+        "time": check_time
+    }
+
+    history.append(record)
+
+    print("\n========== WEBSITE CHECK RESULT ==========")
+    print("Website:", url)
+    print("Status code:", status_code if status_code is not None else "N/A")
+    print("Result:", result)
+    print("Response time:", round(response_time, 3), "seconds")
+    print("Checked at:", check_time)
+
+
+# Execution flow:
+# 1. Display registered websites.
+# 2. Ask which website to check.
+# 3. Validate the selected number.
+# 4. Check the selected website.
+def check_single_website():
+
+    if len(websites) == 0:
+        print("Please add a website first.")
+        return
+
+    view_websites()
+
+    choice = input("Select website number: ").strip()
+
+    if not choice.isdigit():
+        print("Please enter a valid number.")
+        return
+
+    number = int(choice)
+
+    if number < 1 or number > len(websites):
+        print("Invalid website number.")
+        return
+
+    check_website(websites[number - 1])
+
+
+# Execution flow:
+# 1. Check whether websites are available.
+# 2. Loop through all registered websites.
+# 3. Check each website and display its result.
+def check_all_websites():
+
+    if len(websites) == 0:
+        print("No websites registered.")
+        return
+
+    print("\nStarting website monitoring...")
+
+    for website in websites:
+
+        check_website(website)
+
+        print("-----------------------------------")
+
+
+# Execution flow:
+# 1. Check whether history exists.
+# 2. Display each previous website check.
+# 3. Show status codes and response times.
+def view_history():
+
+    if len(history) == 0:
+        print("No checking history available.")
+        return
+
+    print("\n========== WEBSITE CHECK HISTORY ==========")
+
+    for number, record in enumerate(history, start=1):
+
+        print("\nCheck number:", number)
+        print("Website:", record["url"])
+        print("Status:", record["status"])
+        print("Result:", record["result"])
+        print("Response time:", record["response_time"], "seconds")
+        print("Date:", record["time"])
+
+
+# Execution flow:
+# 1. Display registered websites.
+# 2. Ask which website to remove.
+# 3. Validate the selected number.
+# 4. Remove the website from the list.
+def remove_website():
+
+    if len(websites) == 0:
+        print("No websites available.")
+        return
+
+    view_websites()
+
+    choice = input("Enter website number to remove: ").strip()
+
+    if not choice.isdigit():
+        print("Please enter a valid number.")
+        return
+
+    number = int(choice)
+
+    if 1 <= number <= len(websites):
+
+        removed = websites.pop(number - 1)
+
+        print(removed, "removed successfully.")
+
+    else:
+        print("Invalid website number.")
+
+
+# ==========================================
+# MAIN PROGRAM
+# ==========================================
+
+def main():
+
+    while True:
+
+        print("\n========== WEBSITE MONITOR ==========")
+        print("1. Add Website")
+        print("2. View Websites")
+        print("3. Check Single Website")
+        print("4. Check All Websites")
+        print("5. View Checking History")
+        print("6. Remove Website")
+        print("7. Exit")
+        print("=====================================")
+
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            add_website()
+
+        elif choice == "2":
+            view_websites()
+
+        elif choice == "3":
+            check_single_website()
+
+        elif choice == "4":
+            check_all_websites()
+
+        elif choice == "5":
+            view_history()
+
+        elif choice == "6":
+            remove_website()
+
+        elif choice == "7":
+            print("Thank you for using Website Monitor!")
+            break
+
+        else:
+            print("Invalid choice. Please select 1 to 7.")
+
+
+# Start program execution
+main()
