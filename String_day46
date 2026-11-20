@@ -1,0 +1,71 @@
+
+# Word Analysis Program
+
+def analyze_sentence():
+
+    print("\n===== WORD ANALYSIS PROGRAM =====")
+
+    sentence = input("Enter a sentence: ")
+
+    if sentence.strip() == "":
+        print("Please enter a valid sentence.")
+        return
+
+    # Remove extra spaces
+    sentence = sentence.strip()
+
+    # Count characters
+    total_characters = len(sentence)
+
+    # Count words
+    words = sentence.split()
+    total_words = len(words)
+
+    # Count vowels
+    vowels = "aeiou"
+    vowel_count = 0
+
+    for char in sentence.lower():
+        if char in vowels:
+            vowel_count += 1
+
+    # Count consonants
+    consonant_count = 0
+
+    for char in sentence.lower():
+        if char.isalpha() and char not in vowels:
+            consonant_count += 1
+
+    # Reverse sentence
+    reverse_sentence = sentence[::-1]
+
+    # Convert sentence
+    uppercase = sentence.upper()
+    lowercase = sentence.lower()
+    title_case = sentence.title()
+
+    # Find longest word
+    longest_word = ""
+
+    for word in words:
+        if len(word) > len(longest_word):
+            longest_word = word
+
+    # Display results
+    print("\n===== ANALYSIS RESULT =====")
+
+    print("Original Sentence:", sentence)
+    print("Total Characters:", total_characters)
+    print("Total Words:", total_words)
+    print("Total Vowels:", vowel_count)
+    print("Total Consonants:", consonant_count)
+    print("Reverse Sentence:", reverse_sentence)
+    print("Uppercase:", uppercase)
+    print("Lowercase:", lowercase)
+    print("Title Case:", title_case)
+    print("Longest Word:", longest_word)
+    print("Longest Word Length:", len(longest_word))
+
+
+# Main program
+analyze_sentence()
