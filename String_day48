@@ -1,0 +1,118 @@
+
+# Text Search and Replace System
+
+def text_search_replace():
+
+    print("\n===== TEXT SEARCH AND REPLACE SYSTEM =====")
+
+    # Get paragraph from user
+    text = input("\nEnter your paragraph: ")
+
+    if text.strip() == "":
+        print("Please enter some text.")
+        return
+
+    while True:
+
+        print("\n===== MENU =====")
+        print("1. Count total words")
+        print("2. Search a word")
+        print("3. Replace a word")
+        print("4. Count a specific word")
+        print("5. Convert to uppercase")
+        print("6. Convert to lowercase")
+        print("7. Display reversed text")
+        print("8. Display original text")
+        print("9. Exit")
+
+        choice = input("\nEnter your choice: ")
+
+        # Count total words
+        if choice == "1":
+
+            words = text.split()
+            print("Total Words:", len(words))
+
+        # Search for a word
+        elif choice == "2":
+
+            search_word = input("Enter word to search: ")
+
+            if search_word.lower() in text.lower():
+                print("Word found in the paragraph.")
+            else:
+                print("Word not found.")
+
+        # Replace a word
+        elif choice == "3":
+
+            old_word = input("Enter old word: ")
+            new_word = input("Enter new word: ")
+
+            if old_word.lower() in text.lower():
+
+                import re
+
+                pattern = re.compile(
+                    re.escape(old_word),
+                    re.IGNORECASE
+                )
+
+                text = pattern.sub(new_word, text)
+
+                print("Word replaced successfully!")
+                print("Updated Text:", text)
+
+            else:
+                print("Word not found.")
+
+        # Count a specific word
+        elif choice == "4":
+
+            word = input("Enter word to count: ")
+
+            import re
+
+            words = re.findall(r"\b\w+\b", text)
+
+            count = 0
+
+            for item in words:
+                if item.lower() == word.lower():
+                    count += 1
+
+            print("Word appears", count, "times.")
+
+        # Convert to uppercase
+        elif choice == "5":
+
+            print("Uppercase Text:", text.upper())
+
+        # Convert to lowercase
+        elif choice == "6":
+
+            print("Lowercase Text:", text.lower())
+
+        # Reverse text
+        elif choice == "7":
+
+            print("Reversed Text:", text[::-1])
+
+        # Display original text
+        elif choice == "8":
+
+            print("Original Text:", text)
+
+        # Exit program
+        elif choice == "9":
+
+            print("Thank you for using the program!")
+            break
+
+        else:
+
+            print("Invalid choice. Please try again.")
+
+
+# Main program
+text_search_replace()
