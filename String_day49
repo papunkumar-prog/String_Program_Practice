@@ -1,0 +1,75 @@
+
+# Text Encryption and Decryption System
+
+def encrypt_message():
+
+    print("\n===== TEXT ENCRYPTION SYSTEM =====")
+
+    message = input("Enter your message: ")
+
+    if message.strip() == "":
+        print("Please enter a valid message.")
+        return
+
+    shift = int(input("Enter shift value (1-25): "))
+
+    if shift < 1 or shift > 25:
+        print("Please enter a shift between 1 and 25.")
+        return
+
+    encrypted = ""
+
+    # Encrypt each character
+    for char in message:
+
+        if char.isupper():
+
+            new_char = chr(
+                (ord(char) - 65 + shift) % 26 + 65
+            )
+
+            encrypted += new_char
+
+        elif char.islower():
+
+            new_char = chr(
+                (ord(char) - 97 + shift) % 26 + 97
+            )
+
+            encrypted += new_char
+
+        else:
+            encrypted += char
+
+    print("\nOriginal Message:", message)
+    print("Encrypted Message:", encrypted)
+
+    # Decrypt the message
+    decrypted = ""
+
+    for char in encrypted:
+
+        if char.isupper():
+
+            new_char = chr(
+                (ord(char) - 65 - shift) % 26 + 65
+            )
+
+            decrypted += new_char
+
+        elif char.islower():
+
+            new_char = chr(
+                (ord(char) - 97 - shift) % 26 + 97
+            )
+
+            decrypted += new_char
+
+        else:
+            decrypted += char
+
+    print("Decrypted Message:", decrypted)
+
+
+# Main program
+encrypt_message()
