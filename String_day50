@@ -1,0 +1,71 @@
+
+# Email Validator System
+
+def validate_email():
+
+    print("\n===== EMAIL VALIDATOR SYSTEM =====")
+
+    email = input("Enter your email address: ").strip()
+
+    # Check empty input
+    if email == "":
+        print("Email cannot be empty.")
+        return
+
+    # Initialize validation conditions
+    has_at = False
+    has_dot = False
+
+    # Check @ symbol and dot
+    if "@" in email:
+        has_at = True
+
+    if "." in email:
+        has_dot = True
+
+    # Split email into parts
+    parts = email.split("@")
+
+    # Validate email
+    if len(parts) != 2:
+        print("Invalid Email: Must contain exactly one @ symbol.")
+
+    elif parts[0] == "":
+        print("Invalid Email: Username is missing.")
+
+    elif parts[1] == "":
+        print("Invalid Email: Domain is missing.")
+
+    elif not has_dot:
+        print("Invalid Email: Missing dot.")
+
+    elif parts[1].startswith(".") or parts[1].endswith("."):
+        print("Invalid Email: Incorrect domain format.")
+
+    elif ".." in email:
+        print("Invalid Email: Consecutive dots are not allowed.")
+
+    elif " " in email:
+        print("Invalid Email: Spaces are not allowed.")
+
+    else:
+        domain = parts[1]
+
+        if "." not in domain:
+            print("Invalid Email: Domain extension is missing.")
+
+        else:
+            extension = domain.split(".")
+
+            if extension[-1] == "":
+                print("Invalid Email: Extension is missing.")
+
+            else:
+                print("Email Address:", email)
+                print("Username:", parts[0])
+                print("Domain:", domain)
+                print("Email Status: Valid")
+
+
+# Main program
+validate_email()
