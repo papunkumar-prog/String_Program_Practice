@@ -1,0 +1,62 @@
+
+# Character Frequency Analyzer
+
+def character_analyzer():
+
+    print("\n===== CHARACTER FREQUENCY ANALYZER =====")
+
+    text = input("Enter a sentence: ")
+
+    if text.strip() == "":
+        print("Please enter a valid sentence.")
+        return
+
+    # Store character frequency
+    frequency = {}
+
+    # Count each character
+    for char in text.lower():
+
+        if char == " ":
+            continue
+
+        if char in frequency:
+            frequency[char] += 1
+
+        else:
+            frequency[char] = 1
+
+    # Display character frequency
+    print("\n===== CHARACTER FREQUENCY =====")
+
+    for char, count in frequency.items():
+
+        print(char, ":", count)
+
+    # Find most frequent character
+    highest = max(frequency.values())
+
+    print("\n===== ANALYSIS =====")
+
+    print("Total Unique Characters:", len(frequency))
+
+    print("Most Frequent Character(s):")
+
+    for char, count in frequency.items():
+
+        if count == highest:
+            print(char, "appears", count, "times")
+
+    # Find least frequent character
+    lowest = min(frequency.values())
+
+    print("\nLeast Frequent Character(s):")
+
+    for char, count in frequency.items():
+
+        if count == lowest:
+            print(char, "appears", count, "time(s)")
+
+
+# Main program
+character_analyzer()
