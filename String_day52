@@ -1,0 +1,87 @@
+
+# Sentence Analyzer and Formatter
+
+def sentence_analyzer():
+
+    print("\n===== SENTENCE ANALYZER =====")
+
+    text = input("Enter your paragraph: ").strip()
+
+    if text == "":
+        print("Please enter a valid paragraph.")
+        return
+
+    # Separate sentences
+    sentences = []
+
+    for sentence in text.replace("!", ".").replace("?", ".").split("."):
+
+        sentence = sentence.strip()
+
+        if sentence:
+            sentences.append(sentence)
+
+    # Extract words
+    words = text.split()
+
+    # Clean punctuation from words
+    clean_words = []
+
+    for word in words:
+        word = word.strip(".,!?;:")
+
+        if word:
+            clean_words.append(word)
+
+    # Find longest and shortest words
+    longest_word = clean_words[0]
+    shortest_word = clean_words[0]
+
+    for word in clean_words:
+
+        if len(word) > len(longest_word):
+            longest_word = word
+
+        if len(word) < len(shortest_word):
+            shortest_word = word
+
+    # Count vowels
+    vowel_count = 0
+
+    for char in text.lower():
+
+        if char in "aeiou":
+            vowel_count += 1
+
+    # Count uppercase letters
+    uppercase_count = 0
+
+    for char in text:
+
+        if char.isupper():
+            uppercase_count += 1
+
+    # Display analysis
+    print("\n===== ANALYSIS RESULT =====")
+
+    print("Total Characters:", len(text))
+    print("Total Sentences:", len(sentences))
+    print("Total Words:", len(clean_words))
+    print("Total Vowels:", vowel_count)
+    print("Uppercase Letters:", uppercase_count)
+
+    print("Longest Word:", longest_word)
+    print("Shortest Word:", shortest_word)
+
+    print("\n===== SENTENCE LIST =====")
+
+    for index, sentence in enumerate(sentences, start=1):
+        print(index, ".", sentence)
+
+    print("\n===== FORMATTED TEXT =====")
+
+    print(text.title())
+
+
+# Main program
+sentence_analyzer()
